@@ -1,0 +1,142 @@
+/* 1. General Page Reset & Background */
+body {
+    background-color: #0a0e1a; /* Deep navy from image */
+    color: #d1d5db; /* Soft gray text */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding-top: 70px; /* Prevents content from hiding under the fixed navbar */
+}
+
+/* 2. Slim Professional Navbar */
+.navbar {
+    background-color: #111827 !important; /* Slightly lighter navy for depth */
+    border-bottom: 1px solid #1f2937;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: 55px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+    color: #1fb6ff !important; /* Cyan blue for brand */
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.nav-link {
+    color: #9ca3af !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #1fb6ff !important;
+}
+
+.logo-custom {
+    height: 35px !important; /* Keep small to maintain slim navbar */
+    width: auto;
+    object-fit: contain;
+}
+
+/* 3. Typography & Headings */
+.h2 h1 {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+
+/* Subtext "Enter data for..." logic */
+.h2::after {
+    content: "Enter data for evaluation and documentation.";
+    display: block;
+    font-size: 0.95rem;
+    color: #6b7280;
+    text-transform: none;
+    margin-top: 8px;
+    margin-bottom: 25px;
+}
+
+/* 4. Card / Table Container */
+.table-container {
+    margin: 20px auto;
+    width: 100%;
+    max-width: 900px;
+    background: #111827; 
+    padding: 35px;
+    border-radius: 12px;
+    border: 1px solid #1f2937;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* 5. Lists & Links (Criterion Links) */
+ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+ul li {
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 6px;
+    background: rgba(31, 41, 55, 0.5); /* Subtle background for list items */
+    transition: background 0.3s ease;
+}
+
+ul li:hover {
+    background: rgba(31, 182, 255, 0.05);
+}
+
+ul li a {
+    color: #1fb6ff; 
+    text-decoration: none;
+    font-weight: 500;
+    display: block;
+}
+
+ul li a:hover {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* Sub-list (Placement years) */
+ol {
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+ol a {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    display: inline-block;
+    padding: 3px 0;
+}
+
+/* 6. The "Save" Button (From Image) */
+.btn-save {
+    background: linear-gradient(90deg, #00a8e8, #0077b6);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-transform: capitalize;
+    box-shadow: 0 4px 15px rgba(0, 168, 232, 0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 168, 232, 0.6);
+    filter: brightness(1.1);
+}
+
+/* 7. Utility Classes */
+.mt-2 { margin-top: 1.5rem !important; }
