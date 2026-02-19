@@ -89,6 +89,10 @@ class SuccessRateStipulatedPeriodAdmin(admin.ModelAdmin):
         "passed_year_2", 
         "passed_year_3"
                     )
+
+# ==============================
+# 4.3.
+# # ==============================
     
 from .models import studentspassedwithbacklogs
 @admin.register(studentspassedwithbacklogs)
@@ -100,6 +104,39 @@ class studentspassedwithbacklogsAdmin(admin.ModelAdmin):
         "passed_year_2", 
         "passed_year_3"
                     )
+
+# ==============================
+# 4.3.1
+# # ==============================
+from django.contrib import admin
+from .models import AcademicPerformance4_3_1
+
+
+@admin.register(AcademicPerformance4_3_1)
+class AcademicPerformanceAdminFY(admin.ModelAdmin):
+
+    list_display = (
+        "year_label",
+        "X",
+        "Y",
+        "Z",
+        "API",
+        "average_api",
+        "academic_performance_level",
+    )
+
+    search_fields = ("year_label",)
+    ordering = ("-year",)
+
+    # Optional: Make calculated fields read-only
+    readonly_fields = (
+        "API",
+        "average_api",
+        "academic_performance_level",
+    )
+
+
+
 
 #4.6    
 from django.contrib import admin
@@ -115,6 +152,8 @@ class PlacementandHigherStudiesAdmin(admin.ModelAdmin):
         "show_avg",
         "show_assessment",
     )
+
+    
 
     def show_P(self,obj):
         return obj.P
@@ -161,11 +200,12 @@ class AcademicPerformanceAdmin(admin.ModelAdmin):
         return obj.academic_performance_level
     show_apl.short_description = "Academic Performance Level"
 
+
+# ==============================
 #4.2.2
+# ==============================
 from django.contrib import admin
 from .models import SuccessRate, SuccessRateWithBacklogs
-
-
 # ==============================
 # TABLE 4.2.1 (WITHOUT BACKLOG)
 # ==============================

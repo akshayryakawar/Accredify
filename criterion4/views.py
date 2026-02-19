@@ -470,6 +470,92 @@ def students_passed_with_backlogs_pdf(request):
     doc.build(elements)
     return response
 
+#---------------------------4.3.1------------------------------
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib.styles import getSampleStyleSheet
+from .models import AcademicPerformance4_3_1
+
+
+def academic_performance_pdf_4_3_1(request):
+
+    from django.http import HttpResponse
+    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import A4, landscape
+    from reportlab.lib.styles import getSampleStyleSheet
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'inline; filename="Table_4_3_1.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=landscape(A4))
+    styles = getSampleStyleSheet()
+    elements = []
+
+    elements.append(
+        Paragraph("<b>Table No. 4.3.1 : Academic Performance in First Year</b>", styles["Title"])
+    )
+    elements.append(Spacer(1, 20))
+
+    # -------- Get Last 3 Years ----------
+    records = AcademicPerformance4_3_1.last_three_records()
+
+    if len(records) < 3:
+        elements.append(Paragraph("Not enough data (Need 3 years).", styles["Normal"]))
+        doc.build(elements)
+        return response
+
+    r1, r2, r3 = records
+
+    records = AcademicPerformance4_3_1.last_three_records()
+
+    r1, r2, r3 = records
+
+
+    # -------- Table Data ----------
+    table_data = [
+
+        ["Academic Performance", r1.year_label, r2.year_label, r3.year_label],
+
+        ["Mean of CGPA / % (X)", r1.X, r2.X, r3.X],
+
+        ["Total successful students (Y)", r1.Y, r2.Y, r3.Y],
+
+        ["Total appeared (Z)", r1.Z, r2.Z, r3.Z],
+
+        ["API = X × (Y/Z)", r1.API, r2.API, r3.API],
+
+        ["Average API", r1.average_api, "", ""],
+
+        ["Academic Performance Level (2.5 × Avg API)",
+         r1.academic_performance_level, "", ""],
+    ]
+
+    table = Table(table_data, colWidths=[320, 140, 140, 140])
+
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#CCFFFF")),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+
+        ('SPAN', (1, 5), (3, 5)),
+        ('SPAN', (1, 6), (3, 6)),
+
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+    ]))
+
+    elements.append(table)
+
+    doc.build(elements)
+    return response
+
+
+
 #4.6
 from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer

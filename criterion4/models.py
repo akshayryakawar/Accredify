@@ -95,10 +95,55 @@ class studentspassedwithbacklogs(models.Model):
     def __str__(self):
         return self.year_of_entry
     
-
- #4.6
+#4.3.1
 from django.db import models
 
+
+class AcademicPerformance4_3_1(models.Model):
+
+    year_label = models.CharField(max_length=50, unique=True)
+    year = models.IntegerField(null=True, blank=True)
+
+    X = models.FloatField(default=0)
+    Y = models.IntegerField(default=0)
+    Z = models.IntegerField(default=0)
+
+    # ---------- API ----------
+    @property
+    def API(self):
+        if self.Z == 0:
+            return 0
+        return round(self.X * (self.Y / self.Z), 2)
+
+    # ---------- LAST 3 RECORDS ----------
+    @staticmethod
+    def last_three_records():
+        return AcademicPerformance4_3_1.objects.exclude(
+            year=None
+        ).order_by("-year")[:3]
+
+    # ---------- AVERAGE API ----------
+    @property
+    def average_api(self):
+        records = AcademicPerformance4_3_1.last_three_records()
+
+        if len(records) < 3:
+            return 0
+
+        return round(sum(r.API for r in records) / 3, 2)
+
+    # ---------- PERFORMANCE LEVEL ----------
+    @property
+    def academic_performance_level(self):
+        return round(2.5 * self.average_api, 2)
+
+    def __str__(self):
+        return self.year_label
+
+
+
+
+ #4.6
 class PlacementandHigherStudies(models.Model):
 
     year_label = models.CharField(max_length=50, unique=True)
