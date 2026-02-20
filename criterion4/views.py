@@ -662,6 +662,69 @@ def placement_higher_studies_pdf(request):
 
     return response
 
+#4.6.a
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import A4
+from .models import PlacementRecord
+
+
+def placement_pdf(request):
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'inline; filename="placement_report.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=A4)
+    elements = []
+    styles = getSampleStyleSheet()
+
+    years = PlacementRecord.objects.values_list(
+        "assessment_year", flat=True
+    ).distinct()
+
+    for year in years:
+
+        records = PlacementRecord.objects.filter(
+            assessment_year=year
+        )
+
+        # Heading
+        heading = Paragraph(
+            f"<b>Assessment Year : {year}</b>",
+            styles["Heading2"]
+        )
+        elements.append(heading)
+        elements.append(Spacer(1, 12))
+
+        data = [
+            ["Sr. No.", "Student Name", "Enrollment No.", "Employer Name", "Appointment No."]
+        ]
+
+        for index, record in enumerate(records, start=1):
+            data.append([
+                index,
+                record.student_name,
+                record.enrollment_no,
+                record.employer_name,
+                record.appointment_no,
+            ])
+
+        table = Table(data, repeatRows=1)
+
+        table.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.black),
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+        ]))
+
+        elements.append(table)
+        elements.append(PageBreak())
+
+    doc.build(elements)
+    return response
+
 #4.1.1
 from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
@@ -866,6 +929,69 @@ def success_rate_combined_pdf(request):
         ]))
 
         elements.append(t2)
+
+    doc.build(elements)
+    return response
+
+#4.7
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import A4
+from .models import ProfessionalActivity
+
+
+def professional_activity_pdf(request):
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'inline; filename="professional_activities.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=A4)
+    elements = []
+    styles = getSampleStyleSheet()
+
+    years = ProfessionalActivity.objects.values_list(
+        "assessment_year", flat=True
+    ).distinct()
+
+    for year in years:
+
+        records = ProfessionalActivity.objects.filter(
+            assessment_year=year
+        ).order_by("-date")
+
+        # Heading
+        heading = Paragraph(
+            f"<b>{year}</b>",
+            styles["Heading2"]
+        )
+        elements.append(heading)
+        elements.append(Spacer(1, 12))
+
+        data = [
+            ["Sr. No.", "Date", "Event Name", "Details", "Professional Society"]
+        ]
+
+        for index, record in enumerate(records, start=1):
+            data.append([
+                index,
+                record.date.strftime("%d/%m/%Y"),
+                record.event_name,
+                record.details,
+                record.professional_society,
+            ])
+
+        table = Table(data, repeatRows=1)
+
+        table.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.black),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ]))
+
+        elements.append(table)
+        elements.append(PageBreak())
 
     doc.build(elements)
     return response

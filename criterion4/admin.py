@@ -167,6 +167,26 @@ class PlacementandHigherStudiesAdmin(admin.ModelAdmin):
         return obj.assessment
     show_assessment.short_description = "Assessment"
 
+#4.6.a
+from django.contrib import admin
+from .models import PlacementRecord
+
+
+@admin.register(PlacementRecord)
+class PlacementRecordAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "assessment_year",
+        "student_name",
+        "enrollment_no",
+        "employer_name",
+        "appointment_no",
+    )
+
+    list_filter = ("assessment_year",)
+    search_fields = ("student_name", "enrollment_no", "employer_name")
+
+
 #4.4.1
 from django.contrib import admin
 from .models import AcademicPerformance
@@ -260,3 +280,21 @@ class SuccessRateWithBacklogsAdmin(admin.ModelAdmin):
     def get_rate(self, obj):
         return obj.success_rate
     get_rate.short_description = "Success Rate"
+
+#4.7
+from django.contrib import admin
+from .models import ProfessionalActivity
+
+
+@admin.register(ProfessionalActivity)
+class ProfessionalActivityAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "assessment_year",
+        "date",
+        "event_name",
+        "professional_society",
+    )
+
+    list_filter = ("assessment_year", "professional_society")
+    search_fields = ("event_name", "details")

@@ -188,6 +188,28 @@ class PlacementandHigherStudies(models.Model):
 
     def __str__(self):
         return self.year_label
+    
+ #4.6.a
+from django.db import models
+
+
+class PlacementRecord(models.Model):
+
+    assessment_year = models.CharField(max_length=50)
+    # Example:
+    # 2022-23 (CAYm1)
+    # 2023-24 (CAY)
+    # You type manually in admin
+
+    student_name = models.CharField(max_length=200)
+    enrollment_no = models.CharField(max_length=20)
+
+    employer_name = models.CharField(max_length=200)
+    appointment_no = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.student_name} - {self.assessment_year}"
+   
 
 #4.4.1
 from django.db import models
@@ -323,3 +345,23 @@ class SuccessRateWithBacklogs(models.Model):
 
     def __str__(self):
         return self.year_label
+
+#4.7
+from django.db import models
+
+
+class ProfessionalActivity(models.Model):
+
+    assessment_year = models.CharField(max_length=50)
+
+    date = models.DateField()
+
+    event_name = models.CharField(max_length=300)
+
+    details = models.TextField()
+
+    professional_society = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f"{self.event_name} - {self.assessment_year}"
+
