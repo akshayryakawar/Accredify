@@ -942,14 +942,33 @@ from reportlab.lib.pagesizes import A4
 from .models import ProfessionalActivity
 
 
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.lib import colors
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib import pagesizes
+from reportlab.lib.units import inch
+from reportlab.lib.styles import getSampleStyleSheet
+from .models import ProfessionalActivity
+
+
 def professional_activity_pdf(request):
 
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = 'inline; filename="professional_activities.pdf"'
 
-    doc = SimpleDocTemplate(response, pagesize=A4)
+    doc = SimpleDocTemplate(response, pagesize=pagesizes.A4)
     elements = []
+
     styles = getSampleStyleSheet()
+
+    # Custom style for wrapping text
+    normal_style = ParagraphStyle(
+        name='NormalWrap',
+        parent=styles['Normal'],
+        fontSize=9,
+        leading=12
+    )
 
     years = ProfessionalActivity.objects.values_list(
         "assessment_year", flat=True
@@ -959,16 +978,23 @@ def professional_activity_pdf(request):
 
         records = ProfessionalActivity.objects.filter(
             assessment_year=year
-        ).order_by("-date")
+        ).order_by("date")
 
-        # Heading
-        heading = Paragraph(
-            f"<b>{year}</b>",
-            styles["Heading2"]
-        )
-        elements.append(heading)
-        elements.append(Spacer(1, 12))
+        # ===== BLUE HEADER BAR =====
+        header_data = [[f"{year}"]]
 
+        header_table = Table(header_data, colWidths=[7.5 * inch])
+        header_table.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#A7D3D3")),
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ("FONTSIZE", (0, 0), (-1, -1), 12),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+        ]))
+
+        elements.append(header_table)
+        elements.append(Spacer(1, 10))
+
+        # ===== TABLE DATA =====
         data = [
             ["Sr. No.", "Date", "Event Name", "Details", "Professional Society"]
         ]
@@ -977,21 +1003,266 @@ def professional_activity_pdf(request):
             data.append([
                 index,
                 record.date.strftime("%d/%m/%Y"),
-                record.event_name,
-                record.details,
+                Paragraph(record.event_name, normal_style),
+                Paragraph(record.details, normal_style),
                 record.professional_society,
             ])
 
-        table = Table(data, repeatRows=1)
+        table = Table(
+            data,
+            colWidths=[
+                0.6 * inch,
+                1 * inch,
+                2 * inch,
+                2.8 * inch,
+                1.4 * inch
+            ],
+            repeatRows=1
+        )
 
         table.setStyle(TableStyle([
             ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
             ("GRID", (0, 0), (-1, -1), 0.5, colors.black),
-            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ("ALIGN", (0, 0), (0, -1), "CENTER"),
+            ("ALIGN", (1, 0), (1, -1), "CENTER"),
         ]))
+
+        
 
         elements.append(table)
         elements.append(PageBreak())
+
+    doc.build(elements)
+    return response
+
+#4.7.2
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import inch
+from .models import Publication
+
+
+def publication_pdf(request):
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'inline; filename="publication_4_7_2.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=A4)
+    elements = []
+
+    styles = getSampleStyleSheet()
+
+    normal_style = ParagraphStyle(
+        name='NormalWrap',
+        parent=styles['Normal'],
+        fontSize=9,
+        leading=12
+    )
+
+    # ===== TITLE =====
+    title = Paragraph(
+        "<b>4.7.2. Publication of technical magazines, newsletters, etc. (05)</b>",
+        styles["Heading3"]
+    )
+    elements.append(title)
+    elements.append(Spacer(1, 10))
+
+    # ===== TABLE HEADER BAR =====
+    header_data = [["Publication Description",
+                    "Year of Publication",
+                    "Issue No.",
+                    "Editor/Author"]]
+
+    data = header_data
+
+    publications = Publication.objects.all().order_by("-year_of_publication")
+
+    for pub in publications:
+        data.append([
+            Paragraph(pub.publication_description, normal_style),
+            pub.year_of_publication,
+            pub.issue_no,
+            Paragraph(pub.editor_author, normal_style),
+        ])
+
+    table = Table(
+        data,
+        colWidths=[
+            2.2 * inch,
+            1.5 * inch,
+            1.3 * inch,
+            2.0 * inch
+        ],
+        repeatRows=1
+    )
+
+    table.setStyle(TableStyle([
+        # Header
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#A7D3D3")),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+
+        # Grid
+        ("GRID", (0, 0), (-1, -1), 0.6, colors.black),
+
+        # Alignment
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("ALIGN", (1, 1), (2, -1), "CENTER"),
+
+        # Padding
+        ("LEFTPADDING", (0, 0), (-1, -1), 6),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+        ("TOPPADDING", (0, 0), (-1, -1), 5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+    ]))
+
+    elements.append(table)
+    elements.append(Spacer(1, 10))
+
+    # ===== TABLE FOOTER =====
+    footer = Paragraph(
+        "<b>Table No. 4.7.2. : Publication of technical magazines, newsletters</b>",
+        styles["Normal"]
+    )
+    elements.append(footer)
+
+    doc.build(elements)
+    return response
+
+#4.7.3
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.pagesizes import A3
+from reportlab.lib.units import inch
+from .models import StudentParticipation
+
+
+def participation_4_7_3_pdf(request):
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'inline; filename="4.7.3_Student_Participation.pdf"'
+
+    from reportlab.lib.pagesizes import A3, landscape
+
+    doc = SimpleDocTemplate(
+        response,
+        pagesize=landscape(A3),
+        rightMargin=30,
+        leftMargin=30,
+        topMargin=40,
+        bottomMargin=40,
+    )
+    elements = []
+
+    styles = getSampleStyleSheet()
+
+    normal_style = ParagraphStyle(
+        name='NormalWrap',
+        parent=styles['Normal'],
+        fontSize=9,
+        leading=12
+    )
+
+    title_style = ParagraphStyle(
+        name='CenterTitle',
+        parent=styles['Heading2'],
+        alignment=1  # center
+    )
+
+    # ===== MAIN TITLE =====
+    elements.append(Paragraph(
+        "<b>4.7.3 Participation in inter-institute/state/national events by students of the program of study (05)</b>",
+        title_style
+    ))
+    elements.append(Spacer(1, 15))
+
+    years = StudentParticipation.objects.values_list(
+        "assessment_year", flat=True
+    ).distinct()
+
+    for year in years:
+
+        records = StudentParticipation.objects.filter(
+            assessment_year=year
+        )
+
+        data = []
+
+        # ===== HEADER =====
+        data.append([
+            "Sr. No.",
+            "Type of Activity",
+            "Date",
+            "Name of Participating Student",
+            "Organizing Body",
+            "Awards",
+            "Level",
+            "Relevance to PEO's & PO's"
+        ])
+
+        # ===== CAY ROW INSIDE TABLE =====
+        data.append([year, "", "", "", "", "", "", ""])
+
+        # ===== DATA =====
+        for index, record in enumerate(records, start=1):
+            data.append([
+                index,
+                Paragraph(record.type_of_activity, normal_style),
+                record.date,
+                Paragraph(record.student_name, normal_style),
+                Paragraph(record.organizing_body, normal_style),
+                record.awards,
+                record.level,
+                Paragraph(record.relevance_peos_pos, normal_style),
+            ])
+
+
+        table = Table(
+        data,
+        colWidths=[
+            50,   # Sr No
+            200,  # Type
+            80,   # Date
+            220,  # Student Name
+            250,  # Organizing Body
+            100,  # Awards
+            100,  # Level
+            200,  # Relevance
+        ],
+        repeatRows=1
+        )
+
+        table.setStyle(TableStyle([
+
+            # Header
+            ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+
+            # Yellow CAY row
+            ("SPAN", (0, 1), (-1, 1)),
+            ("BACKGROUND", (0, 1), (-1, 1), colors.yellow),
+            ("ALIGN", (0, 1), (-1, 1), "CENTER"),
+            ("FONTNAME", (0, 1), (-1, 1), "Helvetica-Bold"),
+
+            # Grid
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.black),
+
+            # Vertical align
+            ("VALIGN", (0, 0), (-1, -1), "TOP"),
+
+            # Center some columns
+            ("ALIGN", (0, 2), (0, -1), "CENTER"),
+            ("ALIGN", (2, 2), (2, -1), "CENTER"),
+            ("ALIGN", (5, 2), (6, -1), "CENTER"),
+        ]))
+
+        elements.append(table)
+        elements.append(Spacer(1, 20))
 
     doc.build(elements)
     return response

@@ -365,3 +365,44 @@ class ProfessionalActivity(models.Model):
     def __str__(self):
         return f"{self.event_name} - {self.assessment_year}"
 
+#4.7.2
+from django.db import models
+
+
+class Publication(models.Model):
+
+    publication_description = models.CharField(max_length=300)
+    year_of_publication = models.CharField(max_length=100)
+    issue_no = models.CharField(max_length=100)
+    editor_author = models.TextField()
+
+    def __str__(self):
+        return f"{self.publication_description} - {self.year_of_publication}"
+
+#4.7.3
+from django.db import models
+
+
+class StudentParticipation(models.Model):
+
+    assessment_year = models.CharField(max_length=50)
+    # Example: CAY (2023-24)
+
+    type_of_activity = models.CharField(max_length=300)
+
+    date = models.CharField(max_length=50)
+    # Can store year or full date (14-10-2024)
+
+    student_name = models.CharField(max_length=200)
+
+    organizing_body = models.CharField(max_length=300)
+
+    awards = models.CharField(max_length=200)
+
+    level = models.CharField(max_length=100)
+    # Institute / State / National
+
+    relevance_peos_pos = models.TextField()
+
+    def __str__(self):
+        return f"{self.student_name} - {self.assessment_year}"    

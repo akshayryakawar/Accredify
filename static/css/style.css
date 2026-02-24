@@ -140,3 +140,15 @@ ol a {
 
 /* 7. Utility Classes */
 .mt-2 { margin-top: 1.5rem !important; }
+
+.navbar11 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(var(--bg-primary-rgb), 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+}

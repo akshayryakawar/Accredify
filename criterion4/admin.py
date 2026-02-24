@@ -298,3 +298,41 @@ class ProfessionalActivityAdmin(admin.ModelAdmin):
 
     list_filter = ("assessment_year", "professional_society")
     search_fields = ("event_name", "details")
+
+#4.7.2
+from django.contrib import admin
+from .models import Publication
+
+
+@admin.register(Publication)
+class PublicationAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "publication_description",
+        "year_of_publication",
+        "issue_no",
+    )
+
+    search_fields = (
+        "publication_description",
+        "editor_author",
+        "issue_no",
+    )
+
+#4.7.3
+from .models import StudentParticipation
+
+
+@admin.register(StudentParticipation)
+class StudentParticipationAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "assessment_year",
+        "student_name",
+        "type_of_activity",
+        "level",
+        "awards",
+    )
+
+    list_filter = ("assessment_year", "level")
+    search_fields = ("student_name", "type_of_activity")

@@ -9,6 +9,8 @@ from .views import success_rate_combined_pdf
 from .views import academic_performance_pdf_4_3_1
 from .views import placement_pdf
 from .views import professional_activity_pdf
+from .views import publication_pdf
+from .views import participation_4_7_3_pdf
 
 urlpatterns = [
     path("", criterion4_home, name="criterion4_home"),
@@ -22,4 +24,6 @@ urlpatterns = [
     path("4-4-academic_performance/", academic_performance_pdf, name="academic_performance_pdf"),
     path("4-2-2-success_rate_combined/", success_rate_combined_pdf, name="success_rate_combined_pdf"),
     path("4-7-professional_activity/", professional_activity_pdf, name="professional_activity_pdf"),
+    path("4-7-2-publication-pdf/", publication_pdf, name="publication_pdf"),
+    path("4-7-3-participation-pdf/", participation_4_7_3_pdf, name="participation_4_7_3_pdf"),
 ]
