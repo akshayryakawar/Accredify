@@ -79,16 +79,17 @@ class EnrolmentRatioMarksOnlyAdmin(admin.ModelAdmin):
         "marks_60", "marks_50", "marks_below_50"
     )
 
+#4.2
 from .models import SuccessRateStipulatedPeriod
 @admin.register(SuccessRateStipulatedPeriod)
 class SuccessRateStipulatedPeriodAdmin(admin.ModelAdmin):
     list_display = (
-        "year_of_entry", 
+        "year_of_entry",
         "n1_n2_n3_total",
-        "passed_year_1", 
-        "passed_year_2", 
-        "passed_year_3"
-                    )
+        "passed_year_1",
+        "passed_year_2",
+        "passed_year_3",
+    )
 
 # ==============================
 # 4.3.
@@ -189,12 +190,11 @@ class PlacementRecordAdmin(admin.ModelAdmin):
 
 #4.4.1
 from django.contrib import admin
-from .models import AcademicPerformance
+from .models import AcademicPerformanceSecondYear
 
 
-@admin.register(AcademicPerformance)
-class AcademicPerformanceAdmin(admin.ModelAdmin):
-
+@admin.register(AcademicPerformanceSecondYear)
+class AcademicPerformanceSecondYearAdmin(admin.ModelAdmin):
     list_display = (
         "year_label",
         "X",
@@ -207,7 +207,7 @@ class AcademicPerformanceAdmin(admin.ModelAdmin):
 
     # -------- API --------
     def show_api(self, obj):
-        return obj.api
+        return obj.API
     show_api.short_description = "API"
 
     # -------- Average API --------
@@ -336,3 +336,24 @@ class StudentParticipationAdmin(admin.ModelAdmin):
 
     list_filter = ("assessment_year", "level")
     search_fields = ("student_name", "type_of_activity")
+
+#4.5
+from django.contrib import admin
+from .models import AcademicPerformance4_5_1
+
+
+@admin.register(AcademicPerformance4_5_1)
+class AcademicPerformance451Admin(admin.ModelAdmin):
+
+    list_display = (
+        "year_label",
+        "X",
+        "Y",
+        "Z",
+        "show_api",
+    )
+
+    def show_api(self, obj):
+        return obj.API
+
+    show_api.short_description = "API"    

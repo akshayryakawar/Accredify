@@ -69,11 +69,12 @@ class EnrolmentRatioMarksOnly4_1_2(models.Model):
 
     def __str__(self):
         return "Table 4.1.2 Marks"
-  
+
+
 
 #4.2
 class SuccessRateStipulatedPeriod(models.Model):
-    year_of_entry = models.CharField(max_length=20)   # Example: 2018-19
+    year_of_entry = models.CharField(max_length=50, unique=True)   # Example: 2018-19
     n1_n2_n3_total = models.IntegerField()
 
     passed_year_1 = models.IntegerField(null=True, blank=True)
@@ -85,12 +86,11 @@ class SuccessRateStipulatedPeriod(models.Model):
 
 #4.3    
 class studentspassedwithbacklogs(models.Model):
-    year_of_entry = models.CharField(max_length=20)   # Example: 2018-19
+    year_of_entry = models.CharField(max_length=50)
     n1_n2_n3_total = models.IntegerField()
-
-    passed_year_1 = models.IntegerField(null=True, blank=True)
-    passed_year_2 = models.IntegerField(null=True, blank=True)
-    passed_year_3 = models.IntegerField(null=True, blank=True)
+    passed_year_1 = models.IntegerField(blank=True, null=True)
+    passed_year_2 = models.IntegerField(blank=True, null=True)
+    passed_year_3 = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.year_of_entry
@@ -214,46 +214,41 @@ class PlacementRecord(models.Model):
 #4.4.1
 from django.db import models
 
-class AcademicPerformance(models.Model):
+class AcademicPerformanceSecondYear(models.Model):
 
     year_label = models.CharField(max_length=50, unique=True)
+    year = models.IntegerField(null=True, blank=True)
 
-    # ---- Table Fields ----
-    X = models.FloatField(default=0)   # Mean CGPA / %
-    Y = models.IntegerField(default=0) # Successful students
-    Z = models.IntegerField(default=0) # Appeared students
+    X = models.FloatField(default=0)  # Mean CGPA / %
+    Y = models.IntegerField(default=0)  # Successful students
+    Z = models.IntegerField(default=0)  # Appeared students
 
-    # ---------- API ----------
+    # -------- API --------
     @property
-    def api(self):
+    def API(self):
         if self.Z == 0:
             return 0
         return round(self.X * (self.Y / self.Z), 2)
 
-    # ---------- Last 3 records ----------
+    # -------- Last 3 Records --------
     @staticmethod
     def last_three_records():
-        return AcademicPerformance.objects.order_by("-id")[:3]
+        return AcademicPerformanceSecondYear.objects.exclude(
+            year=None
+        ).order_by("-year")[:3]
 
-    @staticmethod
-    def get_api_values():
-        records = AcademicPerformance.last_three_records()
-
-        if len(records) < 3:
-            return (0,0,0)
-
-        return (records[0].api, records[1].api, records[2].api)
-
-    # ---------- Average API ----------
+    # -------- Average API --------
     @property
     def average_api(self):
-        a1,a2,a3 = AcademicPerformance.get_api_values()
-        return round((a1+a2+a3)/3, 2)
+        records = AcademicPerformanceSecondYear.last_three_records()
+        if len(records) < 3:
+            return 0
+        return round(sum(r.api for r in records) / 3, 2)
 
-    # ---------- Academic Performance Level ----------
+    # -------- Academic Performance Level --------
     @property
     def academic_performance_level(self):
-        return round(2 * self.average_api, 2)
+        return round(2.0 * self.average_api, 2)   # ✅ 2.0 multiplier
 
     def __str__(self):
         return self.year_label
@@ -268,7 +263,7 @@ from django.db.models import Avg
 # =========================================
 class SuccessRate(models.Model):
 
-    year_label = models.CharField(max_length=20, unique=True)
+    year_label = models.CharField(max_length=50, unique=True)
 
     # Data
     X = models.IntegerField(default=0)  # Total students
@@ -310,7 +305,7 @@ class SuccessRate(models.Model):
 # =========================================
 class SuccessRateWithBacklogs(models.Model):
 
-    year_label = models.CharField(max_length=20, unique=True)
+    year_label = models.CharField(max_length=50, unique=True)
 
     # Data
     X = models.IntegerField(default=0)  # Total students
@@ -406,3 +401,47 @@ class StudentParticipation(models.Model):
 
     def __str__(self):
         return f"{self.student_name} - {self.assessment_year}"    
+
+#4.5
+from django.db import models
+
+
+class AcademicPerformance4_5_1(models.Model):
+
+    year_label = models.CharField(max_length=50, unique=True)
+    year = models.IntegerField(null=True, blank=True)
+
+    # NAAC Variables
+    X = models.FloatField(default=0)   # Mean CGPA / Percentage
+    Y = models.IntegerField(default=0) # Successful students
+    Z = models.IntegerField(default=0) # Appeared students
+
+    # ---------------- API ----------------
+    @property
+    def API(self):
+        if self.Z == 0:
+            return 0
+        return round(self.X * (self.Y / self.Z), 2)
+
+    # ---------------- Last 3 Years ----------------
+    @staticmethod
+    def last_three_records():
+        return AcademicPerformance4_5_1.objects.exclude(
+            year=None
+        ).order_by("-year")[:3]
+
+    # ---------------- Average API ----------------
+    @property
+    def average_api(self):
+        records = AcademicPerformance4_5_1.last_three_records()
+        if len(records) < 3:
+            return 0
+        return round(sum(r.API for r in records) / 3, 2)
+
+    # ---------------- Performance Level ----------------
+    @property
+    def academic_performance_level(self):
+        return round(1.5 * self.average_api, 2)
+
+    def __str__(self):
+        return self.year_label    

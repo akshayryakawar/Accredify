@@ -1,6 +1,6 @@
-# NAAC Portal – Criterion 4 Dashboard (Django)
+# Accredify – Criterion 4 Dashboard (Django)
 
-A Django-based NAAC Portal project for managing **Criterion 4** data with a modern **Admin Dashboard**, **Edit/Manage pages**, and **PDF report generation** using ReportLab.
+A Django-based Accredify project for managing **Criterion 4** data with a modern **Admin Dashboard**, **Edit/Manage pages**, and **PDF report generation** using ReportLab.
 
 ---
 
@@ -42,9 +42,9 @@ A Django-based NAAC Portal project for managing **Criterion 4** data with a mode
 
 ## 📂 Project Structure (Important Files)
 
-# NAAC Portal – Criterion 4 Dashboard (Django)
+# Accredify – Criterion 4 Dashboard (Django)
 
-A Django-based NAAC Portal project for managing **Criterion 4** data with a modern **Admin Dashboard**, **Edit/Manage pages**, and **PDF report generation** using ReportLab.
+A Django-based Accredify project for managing **Criterion 4** data with a modern **Admin Dashboard**, **Edit/Manage pages**, and **PDF report generation** using ReportLab.
 
 ---
 
@@ -144,3 +144,67 @@ python manage.py runserver
 | Manage Success Rate (4.2)    | `http://127.0.0.1:8000/manage/success-rate/`         |
 | Enrolment Ratio PDF (4.1)    | `http://127.0.0.1:8000/4-1-enrolment-ratio/`         |
 | Success Rate PDF (4.2)       | `http://127.0.0.1:8000/4-2-success-rate-no-backlog/` |
+
+
+!!!!!!!!!!!!!!!!------------------------ important---------------------!!!!!!!!!!!!!!!!!
+
+#4.1
+http://127.0.0.1:8000/enrolment/list/
+http://127.0.0.1:8000/enrolment/add/
+
+#4.1.1
+http://127.0.0.1:8000/enrolment411/add/
+http://127.0.0.1:8000/enrolment411/list/
+
+#4.1.2
+http://127.0.0.1:8000/enrolment412/add/
+http://127.0.0.1:8000/enrolment412/list/
+
+#4.2
+http://127.0.0.1:8000/successrate/add/
+http://127.0.0.1:8000/successrate/list/
+
+#4.2.1 and 4.2.2
+http://127.0.0.1:8000/success421/add/   → Without backlog
+http://127.0.0.1:8000/success422/add/   → With backlog
+
+http://127.0.0.1:8000/success421/list/
+http://127.0.0.1:8000/success422/list/
+
+#4.3
+http://127.0.0.1:8000/backlog43/add/
+http://127.0.0.1:8000/backlog43/list/
+
+#4.3.1
+http://127.0.0.1:8000/academic431/add/
+http://127.0.0.1:8000/academic431/list/
+
+#4.4.1
+http://127.0.0.1:8000/academic44/add/
+http://127.0.0.1:8000/academic44/list/
+
+#4.5
+http://127.0.0.1:8000/academic451/list/
+http://127.0.0.1:8000/academic451/add/
+
+#4.6
+http://127.0.0.1:8000/4-6-placement/   #list
+http://127.0.0.1:8000/4-6-placement/add/ 
+
+#4.6.a
+http://127.0.0.1:8000/placement46a/add/
+http://127.0.0.1:8000/placement46a/list/
+
+
+#4.7.1
+http://127.0.0.1:8000/professional/add/
+http://127.0.0.1:8000/professional/list/
+
+#4.7.2
+http://127.0.0.1:8000/publication472/list/
+http://127.0.0.1:8000/publication472/add/
+
+#4.7.3
+http://127.0.0.1:8000/participation/add/
+http://127.0.0.1:8000/participation/list/
+

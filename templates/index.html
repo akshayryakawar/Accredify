@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Accredify – Accreditation Intelligence Platform{% endblock %}
+
+{% block content %}
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="home">
+    <div class="hero-orb orb-1"></div>
+    <div class="hero-orb orb-2"></div>
+    <div class="hero-orb orb-3"></div>
+    <div class="hero-content">
+        <div class="hero-badge"><span></span> NAAC Accreditation Intelligence Platform</div>
+        <h1 class="hero-title">
+            Accreditation Data,<br>
+            <span class="gradient-text">Reimagined for the Future</span>
+        </h1>
+        <p class="hero-subtitle">
+            Manage, track, and report all NAAC criteria with a unified portal. From enrollment ratios to placement
+            records — every data point, beautifully organized.
+        </p>
+        <div class="hero-actions">
+            <a href="{% url 'dashboard' %}" class="btn-primary-glow">Explore Dashboard &nbsp;→</a>
+            <a href="#solutions" class="btn-outline-glass">See Solutions</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <div class="stat-num">7+</div>
+                <div class="stat-label">Criteria Modules</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">100%</div>
+                <div class="stat-label">NAAC Compliant</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">PDF</div>
+                <div class="stat-label">Auto Reports</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">Live</div>
+                <div class="stat-label">Data Analytics</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── VISION & MISSION ─── -->
+<section class="vm-section" id="vision-mission">
+    <div class="container-xl">
+        <div class="vm-header reveal">
+            <div class="section-label">Our Foundation</div>
+            <h2 class="section-title">Vision &amp; Mission</h2>
+            <p class="section-sub">The principles that guide our platform and every institution we serve.</p>
+        </div>
+        <div class="vm-grid">
+
+            <!-- Vision Card -->
+            <div class="vm-card vm-vision reveal">
+                <div class="vm-card-bg"></div>
+                <div class="vm-icon-wrap">
+                    <div class="vm-icon">
+                        <i class="bi bi-eye-fill"></i>
+                    </div>
+                    <div class="vm-icon-ring"></div>
+                </div>
+                <div class="vm-pill">Vision</div>
+                <h3>To be the most trusted digital backbone for academic accreditation in India</h3>
+                <p>
+                    We envision a future where every educational institution — regardless of size or location — 
+                    has seamless access to intelligent tools that transform complex accreditation data into 
+                    actionable insights, driving continuous quality improvement across the nation.
+                </p>
+                <ul class="vm-points">
+                    <li><i class="bi bi-check-circle-fill"></i> Nationwide NAAC compliance at scale</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Data-driven academic excellence</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Transparent, audit-ready reporting</li>
+                </ul>
+            </div>
+
+            <!-- Divider / Center Element -->
+            <div class="vm-center reveal">
+                <div class="vm-center-orb">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <div class="vm-center-line top"></div>
+                <div class="vm-center-line bottom"></div>
+            </div>
+
+            <!-- Mission Card -->
+            <div class="vm-card vm-mission reveal">
+                <div class="vm-card-bg"></div>
+                <div class="vm-icon-wrap">
+                    <div class="vm-icon">
+                        <i class="bi bi-bullseye"></i>
+                    </div>
+                    <div class="vm-icon-ring"></div>
+                </div>
+                <div class="vm-pill">Mission</div>
+                <h3>To simplify, automate, and elevate the NAAC accreditation process for every institution</h3>
+                <p>
+                    Our mission is to eliminate manual effort and human error in accreditation workflows by 
+                    providing purpose-built modules for every NAAC criterion — empowering administrators, 
+                    faculty, and decision-makers with real-time data and one-click PDF reporting.
+                </p>
+                <ul class="vm-points">
+                    <li><i class="bi bi-check-circle-fill"></i> Automate tedious data collection</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Instant, compliant PDF generation</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Empower every stakeholder with insights</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Core Values Strip -->
+        <div class="vm-values reveal">
+            <div class="vm-value-item">
+                <i class="bi bi-patch-check-fill"></i>
+                <span>Excellence</span>
+            </div>
+            <div class="vm-value-divider"></div>
+            <div class="vm-value-item">
+                <i class="bi bi-transparency"></i>
+                <span>Transparency</span>
+            </div>
+            <div class="vm-value-divider"></div>
+            <div class="vm-value-item">
+                <i class="bi bi-lightbulb-fill"></i>
+                <span>Innovation</span>
+            </div>
+            <div class="vm-value-divider"></div>
+            <div class="vm-value-item">
+                <i class="bi bi-people-fill"></i>
+                <span>Inclusivity</span>
+            </div>
+            <div class="vm-value-divider"></div>
+            <div class="vm-value-item">
+                <i class="bi bi-shield-fill-check"></i>
+                <span>Integrity</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── SOLUTIONS / PRODUCTS ─── -->
+<section class="solutions-section" id="solutions">
+    <div class="container-xl">
+        <div class="reveal">
+            <div class="section-label">Our Solutions</div>
+            <h2 class="section-title">Comprehensive Criterion Modules</h2>
+            <p class="section-sub">Every NAAC data requirement, covered by purpose-built modules for accuracy and
+                compliance.</p>
+        </div>
+        <div class="solutions-grid">
+
+            <div class="sol-card c1 reveal">
+                <div class="sol-icon bg1"><i class="bi bi-people-fill"></i></div>
+                <h3>Criterion 4.1 – Enrolment Ratio</h3>
+                <p>Track student enrollment data across programs with auto-calculated totals and instant PDF report
+                    generation per NAAC requirements.</p>
+                <a href="/enrolment/list/" class="learn-btn">View Module <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="sol-card c2 reveal">
+                <div class="sol-icon bg2"><i class="bi bi-graph-up-arrow"></i></div>
+                <h3>Criterion 4.2 – Success Rate</h3>
+                <p>Monitor student success rates with and without backlogs, empowering institutions to identify
+                    academic performance trends.</p>
+                <a href="/successrate/list/" class="learn-btn">View Module <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="sol-card c3 reveal">
+                <div class="sol-icon bg3"><i class="bi bi-mortarboard-fill"></i></div>
+                <h3>Criterion 4.3 – Academic Performance (First Year)</h3>
+                <p>Track first-year pass percentages and backlog statistics to analyze foundational academic
+                    performance and identify improvement areas.</p>
+                <a href="/firstyear/list/" class="learn-btn">View Module <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="sol-card c4 reveal">
+                <div class="sol-icon bg4"><i class="bi bi-bar-chart-line-fill"></i></div>
+                <h3>Criterion 4.4 – Academic Performance (Second Year)</h3>
+                <p>Evaluate second-year results, backlog clearance rates, and progression trends to ensure academic
+                    consistency and improvement.</p>
+                <a href="/secondyear/list/" class="learn-btn">View Module <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="sol-card c1 reveal">
+                <div class="sol-icon bg1"><i class="bi bi-rocket-takeoff-fill"></i></div>
+                <h3>Criterion 4.5 – Placement, Higher Studies &amp; Entrepreneurship</h3>
+                <p>Analyze placement outcomes, higher education progression, and student startup initiatives to
+                    evaluate overall career development and institutional impact.</p>
+                <a href="/placement/list/" class="learn-btn">View Module <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="sol-card c3 reveal">
+                <div class="sol-icon bg3"><i class="bi bi-briefcase-fill"></i></div>
+                <h3>Criterion 4.6 – Placement</h3>
+                <p>Capture placement and internship data with detailed records. Generate NAAC-ready reports in
+                    seconds for student outcomes.</p>
+                <a href="/4-6-placement/" class="learn-btn">View Module <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="sol-card c2 reveal">
+                <div class="sol-icon bg2"><i class="bi bi-award-fill"></i></div>
+                <h3>Criterion 4.7 – Publications</h3>
+                <p>Manage faculty publications, professional activities, and conference participations in one
+                    streamlined interface.</p>
+                <a href="/publication472/list/" class="learn-btn">View Module <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ─── FEATURES / USE CASES ─── -->
+<section class="features-section" id="features">
+    <div class="container-xl">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-4 reveal">
+                <div class="section-label">Platform Features</div>
+                <h2 class="section-title">Everything You Need for NAAC Compliance</h2>
+                <p class="section-sub">Built specifically for educational institutions to simplify the complex
+                    accreditation process.</p>
+                <a href="{% url 'dashboard' %}" class="btn-primary-glow mt-4 d-inline-block"
+                    style="font-size:0.92rem; padding:0.75rem 1.8rem;">Go to Dashboard →</a>
+            </div>
+            <div class="col-lg-8">
+                <div class="features-grid">
+                    <div class="feat-item reveal">
+                        <div class="feat-icon"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+                        <div class="feat-text">
+                            <h4>Auto PDF Generation</h4>
+                            <p>Generate perfectly formatted NAAC tables and reports directly from your data with one
+                                click.</p>
+                        </div>
+                    </div>
+                    <div class="feat-item reveal">
+                        <div class="feat-icon"><i class="bi bi-bar-chart-fill"></i></div>
+                        <div class="feat-text">
+                            <h4>Visual Analytics</h4>
+                            <p>Interactive Chart.js dashboards give you instant visual insights into institutional
+                                performance.</p>
+                        </div>
+                    </div>
+                    <div class="feat-item reveal">
+                        <div class="feat-icon"><i class="bi bi-database-fill-check"></i></div>
+                        <div class="feat-text">
+                            <h4>Centralized Data Store</h4>
+                            <p>All criteria data stored securely and centrally. No more scattered spreadsheets or
+                                manual files.</p>
+                        </div>
+                    </div>
+                    <div class="feat-item reveal">
+                        <div class="feat-icon"><i class="bi bi-shield-fill-check"></i></div>
+                        <div class="feat-text">
+                            <h4>NAAC Criterion Aligned</h4>
+                            <p>Every module is designed directly around official NAAC assessment criteria and table
+                                formats.</p>
+                        </div>
+                    </div>
+                    <div class="feat-item reveal">
+                        <div class="feat-icon"><i class="bi bi-phone-fill"></i></div>
+                        <div class="feat-text">
+                            <h4>Responsive Design</h4>
+                            <p>Access and manage accreditation data on any device — desktop, tablet, or mobile.</p>
+                        </div>
+                    </div>
+                    <div class="feat-item reveal">
+                        <div class="feat-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+                        <div class="feat-text">
+                            <h4>Fast & Efficient</h4>
+                            <p>Django-powered backend ensures lightning-fast data operations and seamless report
+                                exports.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── INDUSTRIES / APPLICATIONS ─── -->
+<section class="industries-section" id="industries">
+    <div class="container-xl text-center">
+        <div class="reveal">
+            <div class="section-label">Applicability</div>
+            <h2 class="section-title">Built for Every Institution</h2>
+            <p class="section-sub mx-auto">From engineering colleges to arts institutions, our platform adapts to
+                your NAAC accreditation requirements.</p>
+        </div>
+        <div class="industries-grid mt-5">
+            <div class="ind-chip reveal"><i class="bi bi-mortarboard-fill"></i><span>Engineering Colleges</span>
+            </div>
+            <div class="ind-chip reveal"><i class="bi bi-book-fill"></i><span>Arts & Science</span></div>
+            <div class="ind-chip reveal"><i class="bi bi-hospital-fill"></i><span>Medical Institutions</span></div>
+            <div class="ind-chip reveal"><i class="bi bi-bank2"></i><span>Universities</span></div>
+            <div class="ind-chip reveal"><i class="bi bi-tools"></i><span>Polytechnics</span></div>
+            <div class="ind-chip reveal"><i class="bi bi-building-fill"></i><span>B-Schools</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section class="about-section" id="about">
+    <div class="container-xl">
+        <div class="about-inner">
+            <div class="about-visual reveal">
+                <div class="big-icon"><i class="bi bi-shield-check"></i></div>
+                <p style="color:#94a3b8; font-size:0.9rem; margin-top:1rem;">Trusted Accreditation Intelligence</p>
+                <div class="about-stats">
+                    <div class="astat">
+                        <div class="astat-num">4+</div>
+                        <div class="astat-label">Criterion Clusters</div>
+                    </div>
+                    <div class="astat">
+                        <div class="astat-num">10+</div>
+                        <div class="astat-label">Sub-modules</div>
+                    </div>
+                    <div class="astat">
+                        <div class="astat-num">PDF</div>
+                        <div class="astat-label">Reports Ready</div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-text reveal">
+                <div class="section-label">About the Project</div>
+                <h2 class="section-title">Powering NAAC Accreditation with Smart Technology</h2>
+                <p style="color:#94a3b8; line-height:1.8; margin-top:1rem;">
+                    The Accredify is a Django-based accreditation management system designed to help institutions
+                    streamline data collection, analytics, and reporting for the National Assessment and
+                    Accreditation Council (NAAC) process.
+                </p>
+                <p style="color:#94a3b8; line-height:1.8; margin-top:1rem;">
+                    From enrolment ratios and success rates to placement outcomes and faculty publications — every
+                    module is purpose-built to eliminate manual effort and ensure complete compliance with NAAC
+                    assessment criteria.
+                </p>
+                <div class="tags">
+                    <span class="tag">Django</span>
+                    <span class="tag">Bootstrap 5</span>
+                    <span class="tag">ReportLab PDF</span>
+                    <span class="tag">Chart.js</span>
+                    <span class="tag">SQLite</span>
+                    <span class="tag">Python</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

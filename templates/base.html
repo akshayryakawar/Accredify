@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Accredify{% endblock %}</title>
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+
+    <!-- Bootstrap CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Animated Background Gradients -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
+    <!-- ─── NAVBAR ─── -->
+    <nav class="top-nav" id="mainNav">
+        <div class="container-fluid px-lg-5 d-flex align-items-center justify-content-between">
+
+            <!-- BRAND -->
+            <a href="/" class="nav-brand d-flex align-items-center gap-2">
+                <div class="brand-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <span class="brand-name glow-text">Accredify</span>
+            </a>
+
+            <!-- DESKTOP NAV -->
+            <ul class="nav-links d-none d-lg-flex align-items-center gap-4 mb-0">
+
+                <li><a href="/">Home</a></li>
+                <li><a href="{% url 'overview' %}">Overview</a></li>
+                <li><a href="{% url 'dashboard' %}">Criterion 4</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+
+                <!-- SEARCH -->
+                <li>
+                    <form class="d-flex align-items-center" method="GET" action="{% url 'global_search' %}">
+                        <input class="form-control" type="search" name="q" placeholder="Search..."
+                            style="width:180px; height:36px; border-radius:50px;">
+                        <button class="btn btn-save ms-2 px-3" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </form>
+                </li>
+
+                <!-- THEME TOGGLE -->
+                <li>
+                    <button id="themeToggleDesktop" class="btn-outline-glass py-2 px-3"
+                        style="border-radius:50px; font-size:0.85rem;">
+                        🌙 Dark
+                    </button>
+                </li>
+
+                <!-- LOGOUT -->
+                <li>
+                    <a href="#" class="nav-cta">Log Out</a>
+                </li>
+
+            </ul>
+
+            <!-- MOBILE CONTROLS -->
+            <div class="d-flex align-items-center gap-2 d-lg-none">
+                <button id="themeToggle" class="btn-outline-glass p-2"
+                    style="border-radius:50px; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
+                    🌙
+                </button>
+                <button class="nav-toggle" id="navToggle">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- MOBILE MENU -->
+        <ul class="nav-links mobile-links d-lg-none" id="mobileLinks">
+            <li><a href="/">Home</a></li>
+            <li><a href="{% url 'overview' %}">Overview</a></li>
+            <li><a href="{% url 'dashboard' %}">Criterion 4</a></li>
+            <li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="#" class="nav-cta">Log Out</a></li>
+        </ul>
+
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <main class="container-xl main-content position-relative z-1">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- ─── FOOTER ─── -->
+    <footer>
+        <div class="container-xl">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="/" class="nav-brand" style="margin-bottom:0.5rem; display:inline-flex;">
+                        <div class="brand-icon"><i class="bi bi-shield-check"></i></div>
+                        <span class="brand-name ms-2">Accredify</span>
+                    </a>
+                    <p>An intelligent accreditation data management platform for educational institutions.</p>
+                    <div class="footer-socials">
+                        <a href="#" class="social-btn"><i class="bi bi-github"></i></a>
+                        <a href="#" class="social-btn"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="social-btn"><i class="bi bi-envelope-fill"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h5>Modules</h5>
+                    <ul>
+                        <li><a href="/enrolment/list/">Enrolment</a></li>
+                        <li><a href="/successrate/list/">Success Rate</a></li>
+                        <li><a href="/4-6-placement/">Placement</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h5>Platform</h5>
+                    <ul>
+                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li><a href="/#features">Features</a></li>
+                        <li><a href="/#about">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h5>Contact</h5>
+                    <ul>
+                        <li><a href="mailto:admin@naacportal.edu">admin@naacportal.edu</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 Accredify. All rights reserved. Built with Django & Bootstrap 5.</p>
+                <p>Designed for Sandip polytechnic🎓</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Theme & Animation Scripts -->
+    <script>
+        (function () {
+            const HTML = document.documentElement;
+            const BODY = document.body;
+            const STORAGE_KEY = 'naac-theme';
+            const themes = {
+                dark: { icon: '🌙', label: 'Dark', next: 'light' },
+                light: { icon: '☀️', label: 'Light', next: 'dark' },
+            };
+
+            function applyTheme(theme) {
+                HTML.setAttribute('data-theme', theme);
+                BODY.className = theme; // Set body class effectively (dark or light)
+                localStorage.setItem(STORAGE_KEY, theme);
+                const cfg = themes[theme];
+                ['', 'Desktop'].forEach(suffix => {
+                    const icon = document.getElementById('toggleIcon' + suffix);
+                    const label = document.getElementById('toggleLabel' + suffix);
+                    if (icon) icon.textContent = cfg.icon;
+                    if (label) label.textContent = cfg.label;
+                });
+            }
+
+            function toggleTheme() {
+                const current = HTML.getAttribute('data-theme') || 'dark';
+                applyTheme(themes[current].next);
+            }
+
+            const saved = localStorage.getItem(STORAGE_KEY);
+            applyTheme(saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+
+            document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+            document.getElementById('themeToggleDesktop')?.addEventListener('click', toggleTheme);
+
+            // Mobile Nav
+            const navToggle = document.getElementById('navToggle');
+            const mobileLinks = document.getElementById('mobileLinks');
+            navToggle?.addEventListener('click', () => mobileLinks.classList.toggle('open'));
+
+            // Navbar Scroll Effect
+            const nav = document.getElementById('mainNav');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 60) {
+                    nav.style.background = 'var(--nav-bg-scrolled)';
+                    nav.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.3)';
+                } else {
+                    nav.style.background = '';
+                    nav.style.boxShadow = '';
+                }
+            });
+
+            // Reveal Animation
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        })();
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

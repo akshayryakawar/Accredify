@@ -13,10 +13,54 @@ from .models import SuccessRateStipulatedPeriod
 from .models import studentspassedwithbacklogs
 
 
-# ✅ HOME PAGE (No login required)
+# ✅ HOME PAGE (Modern Landing Page)
 def criterion4_home(request):
-    return render(request, "criterion4_home.html")
+    return render(request, "index.html")
 
+def overview(request):
+    return render(request, "overview.html")
+
+def about(request):
+    return render(request, "about.html")
+
+#search function
+# views.py
+
+from django.db.models import Q
+from .models import (
+    EnrolmentRatio,
+    PlacementRecord,
+    Publication,
+    StudentParticipation,
+)
+
+def global_search(request):
+    query = request.GET.get("q")
+    results = {}
+
+    if query:
+        results['participation'] = StudentParticipation.objects.filter(
+            Q(student_name__icontains=query) |
+            Q(type_of_activity__icontains=query) |
+            Q(organizing_body__icontains=query) |
+            Q(level__icontains=query) |
+            Q(assessment_year__icontains=query)
+        )
+
+        results['placement'] = PlacementRecord.objects.filter(
+            Q(student_name__icontains=query) |
+            Q(employer_name__icontains=query)
+        )
+
+        results['publication'] = Publication.objects.filter(
+            Q(editor_author__icontains=query) |
+            Q(publication_description__icontains=query)
+        )
+
+    return render(request, "search_results.html", {
+        "query": query,
+        "results": results
+    })
 
 # ✅ PDF GENERATION (Table 4.1 - Enrolment Ratio)
 def enrolment_ratio_pdf(request):
@@ -144,6 +188,42 @@ def enrolment_ratio_pdf(request):
  # ---------------- BUILD PDF ----------------
     doc.build(elements)
     return response
+
+#newwww
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import EnrolmentRatio
+from .forms import EnrolmentRatioForm
+
+# LIST VIEW
+def enrolment_ratio_list(request):
+    data = EnrolmentRatio.objects.all().order_by("-academic_year")
+    return render(request, "enrolment/list.html", {"data": data})
+
+
+# CREATE VIEW
+def enrolment_ratio_add(request):
+    form = EnrolmentRatioForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("enrolment_ratio_list")   # ✅ FIXED
+    return render(request, "enrolment/form.html", {"form": form})   # ✅ FIXED
+
+
+# UPDATE VIEW
+def enrolment_ratio_edit(request, id):
+    obj = get_object_or_404(EnrolmentRatio, id=id)
+    form = EnrolmentRatioForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("enrolment_ratio_list")
+    return render(request, "enrolment/form.html", {"form": form})   # ✅ FIXED
+
+
+# DELETE VIEW
+def enrolment_ratio_delete(request, id):
+    obj = get_object_or_404(EnrolmentRatio, id=id)
+    obj.delete()
+    return redirect("enrolment_ratio_list")
 
 #4.1.1 PDF GENERATION
 def enrolment_ratio_pdf_4_1(request):
@@ -303,6 +383,79 @@ def enrolment_ratio_pdf_4_1(request):
     doc.build(elements)
     return response
 
+##----------4.1.1---------------------##
+from .forms import EnrolmentRatio411Form
+from django.shortcuts import get_object_or_404
+
+# LIST
+def enrolment_ratio_411_list(request):
+    data = EnrolmentRatio4_1_1.objects.all().order_by("-id")
+    return render(request, "enrolment411/list.html", {"data": data})
+
+
+# ADD
+def enrolment_ratio_411_add(request):
+    form = EnrolmentRatio411Form(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("enrolment_ratio_411_list")
+    return render(request, "enrolment411/form.html", {"form": form})
+
+
+# EDIT
+def enrolment_ratio_411_edit(request, id):
+    obj = get_object_or_404(EnrolmentRatio4_1_1, id=id)
+    form = EnrolmentRatio411Form(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("enrolment_ratio_411_list")
+    return render(request, "enrolment411/form.html", {"form": form})
+
+
+# DELETE
+def enrolment_ratio_411_delete(request, id):
+    obj = get_object_or_404(EnrolmentRatio4_1_1, id=id)
+    obj.delete()
+    return redirect("enrolment_ratio_411_list")
+
+#----------4.1.2------------------------
+from .forms import EnrolmentRatio412Form
+from django.shortcuts import get_object_or_404
+
+# LIST
+def enrolment_ratio_412_list(request):
+    data = EnrolmentRatioMarksOnly4_1_2.objects.all().order_by("-id")
+    return render(request, "enrolment412/list.html", {"data": data})
+
+
+# ADD
+def enrolment_ratio_412_add(request):
+    form = EnrolmentRatio412Form(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("enrolment_ratio_412_list")
+    return render(request, "enrolment412/form.html", {"form": form})
+
+
+# EDIT
+def enrolment_ratio_412_edit(request, id):
+    obj = get_object_or_404(EnrolmentRatioMarksOnly4_1_2, id=id)
+    form = EnrolmentRatio412Form(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("enrolment_ratio_412_list")
+    return render(request, "enrolment412/form.html", {"form": form})
+
+
+# DELETE
+def enrolment_ratio_412_delete(request, id):
+    obj = get_object_or_404(EnrolmentRatioMarksOnly4_1_2, id=id)
+    obj.delete()
+    return redirect("enrolment_ratio_412_list")
+
+marks_obj = EnrolmentRatioMarksOnly4_1_2.objects.last()
+
+
 # ✅ PDF GENERATION (Table 4.2 - Success Rate Without Backlogs)
 def success_rate_nobacklog_pdf(request):
     response = HttpResponse(content_type='application/pdf')
@@ -390,6 +543,43 @@ def success_rate_nobacklog_pdf(request):
     doc.build(elements)
     return response
 
+#---------------4.2-----------------#
+from .forms import SuccessRateStipulatedPeriodForm
+from django.shortcuts import get_object_or_404
+
+# LIST
+def success_rate_stipulated_list(request):
+    data = SuccessRateStipulatedPeriod.objects.all().order_by("-id")
+    return render(request, "successrate/list.html", {"data": data})
+
+
+# ADD
+def success_rate_stipulated_add(request):
+    form = SuccessRateStipulatedPeriodForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("success_rate_stipulated_list")
+    return render(request, "successrate/form.html", {"form": form})
+
+
+# EDIT
+def success_rate_stipulated_edit(request, id):
+    obj = get_object_or_404(SuccessRateStipulatedPeriod, id=id)
+    form = SuccessRateStipulatedPeriodForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("success_rate_stipulated_list")
+    return render(request, "successrate/form.html", {"form": form})
+
+
+# DELETE
+def success_rate_stipulated_delete(request, id):
+    obj = get_object_or_404(SuccessRateStipulatedPeriod, id=id)
+    obj.delete()
+    return redirect("success_rate_stipulated_list")
+
+SuccessRateStipulatedPeriod.objects.all()
+
 # ✅ PDF GENERATION (Table 4.3 - students passed with backlogs )
 def students_passed_with_backlogs_pdf(request):
     response = HttpResponse(content_type='application/pdf')
@@ -469,6 +659,42 @@ def students_passed_with_backlogs_pdf(request):
 
     doc.build(elements)
     return response
+
+from .forms import StudentsPassedWithBacklogsForm
+from .models import studentspassedwithbacklogs
+from django.shortcuts import get_object_or_404
+
+
+# ==========================
+# 4.3 Students With Backlogs
+# ==========================
+
+def backlog_list(request):
+    data = studentspassedwithbacklogs.objects.all().order_by("-id")
+    return render(request, "backlog43/list.html", {"data": data})
+
+
+def backlog_add(request):
+    form = StudentsPassedWithBacklogsForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("backlog_list")
+    return render(request, "backlog43/form.html", {"form": form})
+
+
+def backlog_edit(request, id):
+    obj = get_object_or_404(studentspassedwithbacklogs, id=id)
+    form = StudentsPassedWithBacklogsForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("backlog_list")
+    return render(request, "backlog43/form.html", {"form": form})
+
+
+def backlog_delete(request, id):
+    obj = get_object_or_404(studentspassedwithbacklogs, id=id)
+    obj.delete()
+    return redirect("backlog_list")
 
 #---------------------------4.3.1------------------------------
 from django.http import HttpResponse
@@ -554,7 +780,58 @@ def academic_performance_pdf_4_3_1(request):
     doc.build(elements)
     return response
 
+AcademicPerformance4_3_1.objects.order_by("-year_label")
 
+from .forms import AcademicPerformance431Form
+from .models import AcademicPerformance4_3_1
+from django.shortcuts import get_object_or_404
+
+
+# ==========================
+# 4.3.1 Academic Performance
+# ==========================
+
+def academic431_list(request):
+    data = AcademicPerformance4_3_1.objects.all().order_by("-year_label")
+    
+    avg_api = 0
+    performance_level = 0
+
+    if data.count() >= 3:
+        records = AcademicPerformance4_3_1.last_three_records()
+        avg_api = round(sum(r.API for r in records) / 3, 2)
+        performance_level = round(2.5 * avg_api, 2)
+
+    return render(request, "academic431/list.html", {
+        "data": data,
+        "avg_api": avg_api,
+        "performance_level": performance_level,
+    })
+
+
+def academic431_add(request):
+    form = AcademicPerformance431Form(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("academic431_list")
+    return render(request, "academic431/form.html", {"form": form})
+
+
+def academic431_edit(request, id):
+    obj = get_object_or_404(AcademicPerformance4_3_1, id=id)
+    form = AcademicPerformance431Form(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("academic431_list")
+    return render(request, "academic431/form.html", {"form": form})
+
+
+def academic431_delete(request, id):
+    obj = get_object_or_404(AcademicPerformance4_3_1, id=id)
+    obj.delete()
+    return redirect("academic431_list")
+
+AcademicPerformance4_3_1.objects.all()
 
 #4.6
 from django.http import HttpResponse
@@ -662,6 +939,41 @@ def placement_higher_studies_pdf(request):
 
     return response
 
+from .models import PlacementandHigherStudies
+from .forms import PlacementandHigherStudiesForm
+from django.shortcuts import render, redirect, get_object_or_404
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+
+# LIST
+def placement_list(request):
+    data = PlacementandHigherStudies.objects.all().order_by("-id")
+    return render(request, "placement/list.html", {"data": data})
+
+# ADD
+def placement_add(request):
+    form = PlacementandHigherStudiesForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("placement_list")
+    return render(request, "placement/form.html", {"form": form})
+
+# EDIT
+def placement_edit(request, id):
+    obj = get_object_or_404(PlacementandHigherStudies, id=id)
+    form = PlacementandHigherStudiesForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("placement_list")
+    return render(request, "placement/form.html", {"form": form})
+
+# DELETE
+def placement_delete(request, id):
+    obj = get_object_or_404(PlacementandHigherStudies, id=id)
+    obj.delete()
+    return redirect("placement_list")
+
 #4.6.a
 from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
@@ -725,15 +1037,53 @@ def placement_pdf(request):
     doc.build(elements)
     return response
 
-#4.1.1
+from .forms import PlacementRecordForm
+from .models import PlacementRecord
+from django.shortcuts import get_object_or_404
+
+
+# ==========================
+# 4.6.a Placement Records
+# ==========================
+
+def placement_list1(request):
+    data = PlacementRecord.objects.all().order_by("-assessment_year")
+    return render(request, "placement46a/list.html", {"data": data})
+
+
+def placement_add1(request):
+    form = PlacementRecordForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("placement_list1")
+    return render(request, "placement46a/form.html", {"form": form})
+
+
+def placement_edit1(request, id):
+    obj = get_object_or_404(PlacementRecord, id=id)
+    form = PlacementRecordForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("placement_list1")
+    return render(request, "placement46a/form.html", {"form": form})
+
+
+def placement_delete1(request, id):
+    obj = get_object_or_404(PlacementRecord, id=id)
+    obj.delete()
+    return redirect("placement_list1")
+
+PlacementRecord.objects.filter(assessment_year=...)
+
+
+#4.4.1
 from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.styles import getSampleStyleSheet
 
-from .models import AcademicPerformance
-
+from .models import AcademicPerformanceSecondYear
 
 def academic_performance_pdf(request):
 
@@ -772,7 +1122,7 @@ def academic_performance_pdf(request):
     elements.append(Spacer(1,15))
 
     # -------- FETCH LAST 3 YEARS --------
-    records = AcademicPerformance.objects.order_by("-id")[:3]
+    records = AcademicPerformanceSecondYear.objects.order_by("-id")[:3]
 
     if len(records) < 3:
         elements.append(Paragraph("Enter 3 records first.", styles["Normal"]))
@@ -782,7 +1132,7 @@ def academic_performance_pdf(request):
     r1, r2, r3 = records
 
     # -------- CALCULATIONS --------
-    api1, api2, api3 = r1.api, r2.api, r3.api
+    api1, api2, api3 = r1.API, r2.API, r3.API
     avg_api = round((api1 + api2 + api3) / 3, 2)
     apl = round(2 * avg_api, 2)
 
@@ -819,6 +1169,54 @@ def academic_performance_pdf(request):
 
     return response
 
+from .models import AcademicPerformanceSecondYear
+from .forms import AcademicPerformanceSecondYearForm
+from django.shortcuts import render, redirect, get_object_or_404
+
+
+# ==========================
+# 4.4 Academic Performance (Second Year)
+# ==========================
+
+def second_year_list(request):
+    data = AcademicPerformanceSecondYear.objects.all().order_by("-year")
+
+    avg_api = 0
+    performance_level = 0
+
+    if data.count() >= 3:
+        records = AcademicPerformanceSecondYear.last_three_records()
+        avg_api = round(sum(r.API for r in records) / 3, 2)
+        performance_level = round(2.0 * avg_api, 2)
+
+    return render(request, "academic44/list.html", {
+        "data": data,
+        "avg_api": avg_api,
+        "performance_level": performance_level,
+    })
+
+
+def second_year_add(request):
+    form = AcademicPerformanceSecondYearForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("second_year_list")
+    return render(request, "academic44/form.html", {"form": form})
+
+
+def second_year_edit(request, id):
+    obj = get_object_or_404(AcademicPerformanceSecondYear, id=id)
+    form = AcademicPerformanceSecondYearForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("second_year_list")
+    return render(request, "academic44/form.html", {"form": form})
+
+
+def second_year_delete(request, id):
+    obj = get_object_or_404(AcademicPerformanceSecondYear, id=id)
+    obj.delete()
+    return redirect("second_year_list")
 #4.2.1
 from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
@@ -933,6 +1331,72 @@ def success_rate_combined_pdf(request):
     doc.build(elements)
     return response
 
+from .forms import SuccessRateForm, SuccessRateWithBacklogsForm
+from django.shortcuts import get_object_or_404
+from .models import SuccessRate, SuccessRateWithBacklogs
+
+# ==========================
+# 4.2.1 – WITHOUT BACKLOG
+# ==========================
+
+def success_rate_list(request):
+    data = SuccessRate.objects.all().order_by("-year_label")
+    return render(request, "success421/list.html", {"data": data})
+
+
+def success_rate_add(request):
+    form = SuccessRateForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("success_rate_list")
+    return render(request, "success421/form.html", {"form": form})
+
+
+def success_rate_edit(request, id):
+    obj = get_object_or_404(SuccessRate, id=id)
+    form = SuccessRateForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("success_rate_list")
+    return render(request, "success421/form.html", {"form": form})
+
+
+def success_rate_delete(request, id):
+    obj = get_object_or_404(SuccessRate, id=id)
+    obj.delete()
+    return redirect("success_rate_list")
+
+# ==========================
+# 4.2.2 – WITH BACKLOG
+# ==========================
+
+def success_rate_backlog_list(request):
+    data = SuccessRateWithBacklogs.objects.all().order_by("-year_label")
+    return render(request, "success422/list.html", {"data": data})
+
+
+def success_rate_backlog_add(request):
+    form = SuccessRateWithBacklogsForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("success_rate_backlog_list")
+    return render(request, "success422/form.html", {"form": form})
+
+
+def success_rate_backlog_edit(request, id):
+    obj = get_object_or_404(SuccessRateWithBacklogs, id=id)
+    form = SuccessRateWithBacklogsForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("success_rate_backlog_list")
+    return render(request, "success422/form.html", {"form": form})
+
+
+def success_rate_backlog_delete(request, id):
+    obj = get_object_or_404(SuccessRateWithBacklogs, id=id)
+    obj.delete()
+    return redirect("success_rate_backlog_list")
+
 #4.7
 from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
@@ -1036,6 +1500,38 @@ def professional_activity_pdf(request):
     doc.build(elements)
     return response
 
+#############
+from .forms import ProfessionalActivityForm
+from django.shortcuts import get_object_or_404
+
+# LIST
+def professional_activity_list(request):
+    data = ProfessionalActivity.objects.all().order_by("-assessment_year")
+    return render(request, "professional/list.html", {"data": data})
+
+# ADD
+def professional_activity_add(request):
+    form = ProfessionalActivityForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("professional_activity_list")
+    return render(request, "professional/form.html", {"form": form})
+
+# EDIT
+def professional_activity_edit(request, id):
+    obj = get_object_or_404(ProfessionalActivity, id=id)
+    form = ProfessionalActivityForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("professional_activity_list")
+    return render(request, "professional/form.html", {"form": form})
+
+# DELETE
+def professional_activity_delete(request, id):
+    obj = get_object_or_404(ProfessionalActivity, id=id)
+    obj.delete()
+    return redirect("professional_activity_list")
+
 #4.7.2
 from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
@@ -1131,6 +1627,42 @@ def publication_pdf(request):
 
     doc.build(elements)
     return response
+
+from .models import Publication
+from .forms import PublicationForm
+from django.shortcuts import render, redirect, get_object_or_404
+
+
+# ==========================
+# 4.7.2 Publications
+# ==========================
+
+def publication_list1(request):
+    data = Publication.objects.all().order_by("-year_of_publication")
+    return render(request, "publication472/list.html", {"data": data})
+
+
+def publication_add1(request):
+    form = PublicationForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("publication_list1")
+    return render(request, "publication472/form.html", {"form": form})
+
+
+def publication_edit1(request, id):
+    obj = get_object_or_404(Publication, id=id)
+    form = PublicationForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("publication_list1")
+    return render(request, "publication472/form.html", {"form": form})
+
+
+def publication_delete1(request, id):
+    obj = get_object_or_404(Publication, id=id)
+    obj.delete()
+    return redirect("publication_list1")
 
 #4.7.3
 from django.http import HttpResponse
@@ -1266,3 +1798,185 @@ def participation_4_7_3_pdf(request):
 
     doc.build(elements)
     return response
+
+########
+from .forms import StudentParticipationForm
+from django.shortcuts import redirect, get_object_or_404
+
+# LIST VIEW
+def participation_list(request):
+    data = StudentParticipation.objects.all().order_by("-assessment_year")
+    return render(request, "participation/list.html", {"data": data})
+
+# CREATE VIEW
+def participation_add(request):
+    form = StudentParticipationForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("participation_list")
+    return render(request, "participation/form.html", {"form": form})
+
+# UPDATE VIEW
+def participation_edit(request, id):
+    obj = get_object_or_404(StudentParticipation, id=id)
+    form = StudentParticipationForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("participation_list")
+    return render(request, "participation/form.html", {"form": form})
+
+# DELETE VIEW
+def participation_delete(request, id):
+    obj = get_object_or_404(StudentParticipation, id=id)
+    obj.delete()
+    return redirect("participation_list")
+
+#4.5
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib.units import inch
+from reportlab.lib.styles import ParagraphStyle
+
+
+
+def academic451_pdf(request):
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'inline; filename="academic_performance_4_5_1.pdf"'
+
+    # 🔥 Landscape mode
+    doc = SimpleDocTemplate(response, pagesize=landscape(A4))
+
+    elements = []
+    styles = getSampleStyleSheet()
+
+    elements.append(Paragraph(
+        "Table No. 4.5.1 : Academic Performance in Final Year",
+        styles["Heading2"]
+    ))
+    elements.append(Spacer(1, 0.3 * inch))
+
+    records = AcademicPerformance4_5_1.last_three_records()
+
+    if len(records) < 3:
+        elements.append(Paragraph("Please add at least 3 years of data.", styles["Normal"]))
+        doc.build(elements)
+        return response
+
+    r1, r2, r3 = records
+
+    header_style = styles["Normal"]
+
+    data = [
+    [
+        Paragraph("<b>Academic Performance</b>", styles["Normal"]),
+        Paragraph(f"<b>{r1.year_label}</b>", styles["Normal"]),
+        Paragraph(f"<b>{r2.year_label}</b>", styles["Normal"]),
+        Paragraph(f"<b>{r3.year_label}</b>", styles["Normal"]),
+    ],
+    ["Mean of CGPA / % (X)", r1.X, r2.X, r3.X],
+    ["Total Successful Students (Y)", r1.Y, r2.Y, r3.Y],
+    ["Total Appeared (Z)", r1.Z, r2.Z, r3.Z],
+    ["API = X × (Y/Z)", r1.API, r2.API, r3.API],
+
+    ]
+
+    avg_api = round((r1.API + r2.API + r3.API) / 3, 2)
+    performance_level = round(1.5 * avg_api, 2)
+
+    data.append(["Average API", "", "", avg_api])
+    data.append(["Academic Performance Level (1.5 × Avg API)", "", "", performance_level])
+
+    # 🔥 Proper column widths
+    table = Table(
+        data,
+        colWidths=[3.2 * inch, 2.4 * inch, 2.4 * inch, 2.4 * inch]
+    )
+
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.lightblue),
+        ("GRID", (0, 0), (-1, -1), 1, colors.black),
+        ("ALIGN", (1, 1), (-1, -1), "CENTER"),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("FONTSIZE", (0, 0), (-1, -1), 10),
+    ]))
+
+    elements.append(table)
+    doc.build(elements)
+
+    return response
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import AcademicPerformance4_5_1
+from .forms import AcademicPerformance451Form
+
+
+# ==============================
+# 4.5 Academic Performance Final Year
+# ==============================
+
+def academic451_list1(request):
+    data = AcademicPerformance4_5_1.objects.all().order_by("-year")
+
+    avg_api = 0
+    performance_level = 0
+
+    if data.count() >= 3:
+        last_three = AcademicPerformance4_5_1.last_three_records()
+        avg_api = round(sum(r.API for r in last_three) / 3, 2)
+        performance_level = round(1.5 * avg_api, 2)
+
+    return render(request, "academic451/list.html", {
+        "data": data,
+        "avg_api": avg_api,
+        "performance_level": performance_level
+    })
+
+
+def academic451_add1(request):
+    form = AcademicPerformance451Form(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("academic451_list1")
+    return render(request, "academic451/form.html", {"form": form})
+
+
+def academic451_edit1(request, id):
+    obj = get_object_or_404(AcademicPerformance4_5_1, id=id)
+    form = AcademicPerformance451Form(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("academic451_list1")
+    return render(request, "academic451/form.html", {"form": form})
+
+
+def academic451_delete1(request, id):
+    obj = get_object_or_404(AcademicPerformance4_5_1, id=id)
+    obj.delete()
+    return redirect("academic451_list1")
+
+
+#------------------DASHBOARD-------------------#
+def dashboard(request):
+
+    from .models import (
+        AcademicPerformance4_3_1,
+        AcademicPerformance4_5_1,
+        PlacementRecord,
+        Publication
+    )
+
+    context = {
+        "total_publications": Publication.objects.count(),
+        "total_placements": PlacementRecord.objects.count(),
+        "academic451_score": (
+            AcademicPerformance4_5_1.last_three_records()[0].academic_performance_level
+            if AcademicPerformance4_5_1.objects.exists()
+            else 0
+        ),
+    }
+
+    return render(request, "dashboard.html", context)

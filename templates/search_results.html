@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+    <h2 class="h2">Search Results for "{{ query }}"</h2>
+
+    <div class="table-container">
+
+        {% for key, items in results.items %}
+            <h5 style="color:#1fb6ff;">{{ key|title }}</h5>
+
+            {% if items %}
+                <ul>
+                    {% for item in items %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No results found.</p>
+            {% endif %}
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

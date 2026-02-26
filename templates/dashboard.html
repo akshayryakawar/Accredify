@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-header mt-4 reveal">
+    <h1>Criterion 4 Dashboard</h1>
+    <p>Manage data and generate reports for Students’ Performance</p>
+</div>
+
+<div class="dashboard-grid">
+
+    <!-- 4.1 Enrolment Ratio -->
+    <div class="criterion-card reveal">
+        <div class="card-icon">
+            <i class="bi bi-people-fill"></i>
+        </div>
+        <h3>4.1 Enrolment Ratio</h3>
+        <div class="card-actions">
+            <a href="{% url 'enrolment_ratio_list' %}" class="btn-glass btn-primary-glass"><i
+                    class="bi bi-pencil-square"></i> Manage</a>
+            <a href="{% url 'enrolment_ratio_pdf' %}" target="_blank" class="btn-glass"><i
+                    class="bi bi-file-earmark-pdf"></i> PDF</a>
+        </div>
+    </div>
+
+    <!-- 4.2 Success Rate -->
+    <div class="criterion-card reveal">
+        <div class="card-icon">
+            <i class="bi bi-graph-up-arrow"></i>
+        </div>
+        <h3>4.2 Success Rate</h3>
+        <div class="card-actions">
+            <a href="{% url 'success_rate_stipulated_list' %}" class="btn-glass btn-primary-glass"><i
+                    class="bi bi-gear"></i> 4.2</a>
+            <a href="{% url 'success_rate_list' %}" class="btn-glass btn-primary-glass"><i class="bi bi-gear"></i>
+                4.2.1</a>
+            <a href="{% url 'success_rate_backlog_list' %}" class="btn-glass btn-primary-glass"><i
+                    class="bi bi-gear"></i> 4.2.2</a>
+            <a href="{% url 'success_rate_combined_pdf' %}" target="_blank"
+                class="btn-glass w-100 justify-content-center mt-2"><i class="bi bi-file-earmark-pdf"></i> PDF
+                Report</a>
+        </div>
+    </div>
+
+    <!-- 4.3 Academic Performance First Year -->
+    <div class="criterion-card reveal">
+        <div class="card-icon">
+            <i class="bi bi-book"></i>
+        </div>
+        <h3>4.3 Academic Performance – First Year</h3>
+        <div class="card-actions">
+            <a href="{% url 'backlog_list' %}" class="btn-glass btn-primary-glass"><i class="bi bi-gear"></i> Manage
+                4.3</a>
+            <a href="{% url 'academic431_list' %}" class="btn-glass btn-primary-glass"><i class="bi bi-gear"></i> Manage
+                4.3.1</a>
+            <a href="{% url 'academic_performance_pdf_4_3_1' %}" target="_blank"
+                class="btn-glass w-100 justify-content-center mt-2"><i class="bi bi-file-earmark-pdf"></i> PDF</a>
+        </div>
+    </div>
+
+    <!-- 4.4 Academic Performance Second Year -->
+    <div class="criterion-card reveal">
+        <div class="card-icon">
+            <i class="bi bi-journal-check"></i>
+        </div>
+        <h3>4.4 Academic Performance – Second Year</h3>
+        <div class="card-actions">
+            <a href="{% url 'second_year_list' %}" class="btn-glass btn-primary-glass"><i
+                    class="bi bi-pencil-square"></i> Manage Data</a>
+            <a href="{% url 'academic_performance_pdf' %}" target="_blank" class="btn-glass"><i
+                    class="bi bi-file-earmark-pdf"></i> PDF</a>
+        </div>
+    </div>
+
+    <!-- 4.5 Placement & Entrepreneurship -->
+    <div class="criterion-card reveal">
+        <div class="card-icon">
+            <i class="bi bi-briefcase"></i>
+        </div>
+        <h3>4.5 Placement, Higher Studies & Entrepreneurship</h3>
+        <div class="card-actions">
+            <a href="{% url 'academic451_list1' %}" class="btn-glass btn-primary-glass"><i
+                    class="bi bi-pencil-square"></i> Manage Data</a>
+            <a href="{% url 'academic451_pdf' %}" target="_blank" class="btn-glass"><i
+                    class="bi bi-file-earmark-pdf"></i> PDF</a>
+        </div>
+    </div>
+
+    <!-- 4.6 Placement and Higher Studies -->
+    <div class="criterion-card reveal">
+        <div class="card-icon">
+            <i class="bi bi-building"></i>
+        </div>
+        <h3>4.6 Placement and Higher Studies</h3>
+        <div class="card-actions">
+            <a href="{% url 'placement_list' %}" class="btn-glass btn-primary-glass"><i class="bi bi-gear"></i> Manage
+                4.6</a>
+            <a href="{% url 'placement_list1' %}" class="btn-glass btn-primary-glass"><i class="bi bi-gear"></i> Manage
+                4.6.a</a>
+            <a href="{% url 'placement_pdf' %}" target="_blank" class="btn-glass w-100 justify-content-center mt-2"><i
+                    class="bi bi-file-earmark-pdf"></i> PDF</a>
+        </div>
+    </div>
+
+    <!-- 4.7 Professional Activities -->
+    <div class="criterion-card reveal">
+        <div class="card-icon">
+            <i class="bi bi-award"></i>
+        </div>
+        <h3>4.7 Professional Activities</h3>
+        <div class="card-actions">
+            <a href="{% url 'professional_activity_list' %}" class="btn-glass btn-primary-glass"><i
+                    class="bi bi-gear"></i> 4.7.1</a>
+            <a href="{% url 'publication_list1' %}" class="btn-glass btn-primary-glass"><i class="bi bi-gear"></i>
+                4.7.2</a>
+            <a href="{% url 'participation_list' %}" class="btn-glass btn-primary-glass"><i class="bi bi-gear"></i>
+                4.7.3</a>
+            <a href="{% url 'professional_activity_pdf' %}" target="_blank"
+                class="btn-glass w-100 justify-content-center mt-2"><i class="bi bi-file-earmark-pdf"></i> PDF</a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

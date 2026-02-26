@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header mt-4 reveal">
+    <h1>Table 4.1.2</h1>
+    <p>Enrolment Ratio Marks</p>
+</div>
+
+<div class="container-xl reveal">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h5 fw-bold mb-0">Marks Records</h2>
+        <a href="{% url 'enrolment_ratio_412_add' %}" class="btn-primary-glow">
+            <i class="bi bi-plus-lg"></i> Add Marks Record
+        </a>
+    </div>
+
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>>= 90%</th>
+                        <th>>= 80%</th>
+                        <th>>= 70%</th>
+                        <th>>= 60%</th>
+                        <th>>= 50%</th>
+                        <th>
+                            < 50%</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data %}
+                    <tr>
+                        <td class="fw-bold">{{ item.marks_90 }}</td>
+                        <td>{{ item.marks_80 }}</td>
+                        <td>{{ item.marks_70 }}</td>
+                        <td>{{ item.marks_60 }}</td>
+                        <td>{{ item.marks_50 }}</td>
+                        <td>{{ item.marks_below_50 }}</td>
+                        <td class="text-end">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{% url 'enrolment_ratio_412_edit' item.id %}" class="btn-glass btn-sm"
+                                    title="Edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a href="{% url 'enrolment_ratio_412_delete' item.id %}"
+                                    class="btn-glass btn-sm text-danger border-danger" title="Delete">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <i class="bi bi-inbox display-4 text-muted mb-3 d-block"></i>
+                            <p class="text-muted">No records found. Click "Add Marks Record" to get started.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

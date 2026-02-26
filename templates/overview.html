@@ -1,0 +1,863 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Criterion 4 Overview – Accredify{% endblock %}
+
+{% block content %}
+
+<!-- ─── PAGE HERO ─── -->
+<div class="ov-hero reveal">
+    <div class="ov-hero-badge"><i class="bi bi-shield-fill-check"></i> NBA / NAAC Criterion 4</div>
+    <h1 class="ov-hero-title">Students' Performance<br><span class="gradient-text">Overview & Reports</span></h1>
+    <p class="ov-hero-sub">A centralized platform for managing, analyzing, and reporting all Criterion 4 student performance data — from enrolment ratios to professional activities.</p>
+    <div class="ov-hero-actions">
+        <a href="{% url 'dashboard' %}" class="btn-primary-glow">Go to Dashboard &nbsp;→</a>
+        <a href="#problem" class="btn-outline-glass">Read Problem Statement</a>
+    </div>
+</div>
+
+<!-- ─── QUICK STATS STRIP ─── -->
+<div class="ov-stats-strip reveal">
+    <div class="ov-stat">
+        <div class="ov-stat-num">7</div>
+        <div class="ov-stat-label">Criteria Covered</div>
+    </div>
+    <div class="ov-stat-divider"></div>
+    <div class="ov-stat">
+        <div class="ov-stat-num">12+</div>
+        <div class="ov-stat-label">PDF Reports</div>
+    </div>
+    <div class="ov-stat-divider"></div>
+    <div class="ov-stat">
+        <div class="ov-stat-num">100%</div>
+        <div class="ov-stat-label">NBA Compliant</div>
+    </div>
+    <div class="ov-stat-divider"></div>
+    <div class="ov-stat">
+        <div class="ov-stat-num">0</div>
+        <div class="ov-stat-label">Manual Effort</div>
+    </div>
+</div>
+
+<!-- ─── PROBLEM STATEMENT ─── -->
+<section class="ov-problem-section" id="problem">
+    <div class="ov-problem-label reveal">
+        <div class="section-label">Problem Statement</div>
+        <h2 class="section-title">The Challenge We Solve</h2>
+    </div>
+
+    <div class="ov-problem-body">
+
+        <!-- Main statement card -->
+        <div class="ov-ps-main reveal">
+            <div class="ov-ps-quote-mark">"</div>
+            <p>
+                NBA Criterion 4 focuses on evaluating students' performance, which includes academic results,
+                pass percentage, student progression, placement outcomes, higher studies, internships, and
+                achievements. In many educational institutions, this information is maintained using
+                <strong>manual methods</strong> such as registers, spreadsheets, and scattered documents.
+            </p>
+            <p>
+                As a result, departments often face issues like <strong>data redundancy</strong>,
+                <strong>missing records</strong>, <strong>inaccurate reporting</strong>, and increased time
+                and effort during accreditation preparation and internal performance evaluation.
+            </p>
+            <p>
+                This project proposes an <strong>Automated Student Performance Data and Report Management
+                System</strong> that provides a centralized and secure platform for storing, managing, and
+                analyzing student performance data. The system enables authorized faculty and administrators
+                to record student details, update academic results, maintain placement and progression
+                information, and generate NBA Criterion 4 compliant reports.
+            </p>
+            <p>
+                It also supports exporting reports in <strong>PDF and Excel formats</strong>, which simplifies
+                documentation, sharing, and submission processes. Additionally, the system includes dashboards
+                and analytical tools to monitor performance trends such as pass percentage, placement
+                statistics, and student progression patterns.
+            </p>
+            <p class="ov-ps-conclusion">
+                Overall, the proposed system reduces manual workload, improves accuracy, ensures transparency,
+                and supports efficient preparation of NBA Criterion 4 documentation.
+            </p>
+        </div>
+
+        <!-- Pain points -->
+        <div class="ov-pain-grid">
+            <div class="ov-pain-card reveal">
+                <div class="ov-pain-icon"><i class="bi bi-file-earmark-x-fill"></i></div>
+                <h4>Data Redundancy</h4>
+                <p>Same student data stored across multiple spreadsheets and registers with no single source of truth.</p>
+            </div>
+            <div class="ov-pain-card reveal">
+                <div class="ov-pain-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                <h4>Missing Records</h4>
+                <p>Critical performance metrics go unrecorded due to scattered, decentralized data management processes.</p>
+            </div>
+            <div class="ov-pain-card reveal">
+                <div class="ov-pain-icon"><i class="bi bi-graph-down-arrow"></i></div>
+                <h4>Inaccurate Reporting</h4>
+                <p>Manual calculations and copy-paste errors lead to inaccurate NAAC/NBA reports and failed audits.</p>
+            </div>
+            <div class="ov-pain-card reveal">
+                <div class="ov-pain-icon"><i class="bi bi-clock-history"></i></div>
+                <h4>Time-Consuming</h4>
+                <p>Accreditation preparation takes weeks of manual compilation that could be automated in minutes.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── SOLUTION HIGHLIGHTS ─── -->
+<section class="ov-solution-section">
+    <div class="ov-solution-inner">
+        <div class="ov-solution-text reveal">
+            <div class="section-label">Our Solution</div>
+            <h2 class="section-title">What This System Delivers</h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin-bottom:1.5rem;">
+                A unified, secure, and intelligent platform designed from the ground up for NBA Criterion 4
+                compliance — replacing manual workflows with automated, audit-ready processes.
+            </p>
+            <div class="ov-solution-features">
+                <div class="ov-sf-item">
+                    <i class="bi bi-database-fill-check"></i>
+                    <div>
+                        <strong>Centralized Data Store</strong>
+                        <span>All student performance data in one secure, role-access-controlled platform.</span>
+                    </div>
+                </div>
+                <div class="ov-sf-item">
+                    <i class="bi bi-file-earmark-pdf-fill"></i>
+                    <div>
+                        <strong>One-Click PDF Reports</strong>
+                        <span>Generate NBA-compliant Criterion 4 reports instantly, ready for submission.</span>
+                    </div>
+                </div>
+                <div class="ov-sf-item">
+                    <i class="bi bi-bar-chart-fill"></i>
+                    <div>
+                        <strong>Live Analytics Dashboard</strong>
+                        <span>Track pass percentages, placement stats, and trends in real time.</span>
+                    </div>
+                </div>
+                <div class="ov-sf-item">
+                    <i class="bi bi-people-fill"></i>
+                    <div>
+                        <strong>Role-Based Access</strong>
+                        <span>Faculty, HoDs, and admins each see exactly what they need — nothing more.</span>
+                    </div>
+                </div>
+                <div class="ov-sf-item">
+                    <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+                    <div>
+                        <strong>Excel Export</strong>
+                        <span>Export any dataset to Excel for offline analysis or institutional archives.</span>
+                    </div>
+                </div>
+                <div class="ov-sf-item">
+                    <i class="bi bi-shield-fill-check"></i>
+                    <div>
+                        <strong>Audit-Ready Accuracy</strong>
+                        <span>Eliminate manual calculation errors — every figure is computed automatically.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ov-solution-visual reveal">
+            <div class="ov-sv-card">
+                <div class="ov-sv-row">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                    <span>Enrolment data recorded</span>
+                    <span class="ov-sv-badge">Live</span>
+                </div>
+                <div class="ov-sv-row">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                    <span>Pass percentage computed</span>
+                    <span class="ov-sv-badge">Auto</span>
+                </div>
+                <div class="ov-sv-row">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                    <span>Placement report generated</span>
+                    <span class="ov-sv-badge ov-badge-green">PDF ✓</span>
+                </div>
+                <div class="ov-sv-row">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                    <span>Criterion 4.7 submissions</span>
+                    <span class="ov-sv-badge ov-badge-green">Ready</span>
+                </div>
+                <div class="ov-sv-divider"></div>
+                <div class="ov-sv-progress-label">
+                    <span>Accreditation Readiness</span>
+                    <span class="ov-sv-pct">100%</span>
+                </div>
+                <div class="ov-sv-progress-bar">
+                    <div class="ov-sv-progress-fill"></div>
+                </div>
+                <div class="ov-sv-footer">
+                    <i class="bi bi-shield-fill-check"></i> All Criterion 4 modules active
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── CRITERION REPORT CARDS ─── -->
+<section class="ov-reports-section" id="reports">
+    <div class="ov-reports-header reveal">
+        <div class="section-label">Reports & Documentation</div>
+        <h2 class="section-title">Criterion 4 Modules</h2>
+        <p class="section-sub" style="margin:0 auto;">Select a criterion to view its NBA-compliant reports and documentation.</p>
+    </div>
+
+    <div class="dashboard-grid">
+
+        <!-- 4.1 Enrolment Ratio -->
+        <div class="criterion-card ov-ccard ov-c1 reveal">
+            <div class="ov-ccard-num">4.1</div>
+            <div class="card-icon"><i class="bi bi-people-fill"></i></div>
+            <h3>Enrolment Ratio</h3>
+            <p class="ov-ccard-desc">Student enrollment data across programs with auto-calculated totals per NAAC requirements.</p>
+            <div class="sub-criteria">
+                <a href="{% url 'enrolment_ratio_pdf' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.1 Enrolment Ratio
+                </a>
+                <a href="{% url 'enrolment_ratio_pdf_4_1' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.1.1 Enrolment Ratio
+                </a>
+            </div>
+        </div>
+
+        <!-- 4.2 Success Rate -->
+        <div class="criterion-card ov-ccard ov-c2 reveal">
+            <div class="ov-ccard-num">4.2</div>
+            <div class="card-icon"><i class="bi bi-graph-up-arrow"></i></div>
+            <h3>Success Rate in Stipulated Period</h3>
+            <p class="ov-ccard-desc">Monitor student success rates with and without backlogs to identify academic performance trends.</p>
+            <div class="sub-criteria">
+                <a href="{% url 'success_rate_nobacklog_pdf' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.2 Success Rate (60)
+                </a>
+                <a href="{% url 'success_rate_combined_pdf' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.2.1 Success Rate
+                </a>
+            </div>
+        </div>
+
+        <!-- 4.3 Academic Performance First Year -->
+        <div class="criterion-card ov-ccard ov-c3 reveal">
+            <div class="ov-ccard-num">4.3</div>
+            <div class="card-icon"><i class="bi bi-book"></i></div>
+            <h3>Academic Performance – First Year</h3>
+            <p class="ov-ccard-desc">Pass percentages and backlog statistics to analyze foundational academic performance.</p>
+            <div class="sub-criteria">
+                <a href="{% url 'students_passed_with_backlogs_pdf' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.3 Academic Performance
+                </a>
+                <a href="{% url 'academic_performance_pdf_4_3_1' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.3.1 Academic Performance
+                </a>
+            </div>
+        </div>
+
+        <!-- 4.4 Academic Performance Second Year -->
+        <div class="criterion-card ov-ccard ov-c4 reveal">
+            <div class="ov-ccard-num">4.4</div>
+            <div class="card-icon"><i class="bi bi-journal-check"></i></div>
+            <h3>Academic Performance – Second Year</h3>
+            <p class="ov-ccard-desc">Evaluate second-year results, backlog clearance rates, and progression trends.</p>
+            <div class="card-actions">
+                <a href="{% url 'academic_performance_pdf' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.4 Academic Performance
+                </a>
+            </div>
+        </div>
+
+        <!-- 4.5 Placement Higher Studies -->
+        <div class="criterion-card ov-ccard ov-c5 reveal">
+            <div class="ov-ccard-num">4.5</div>
+            <div class="card-icon"><i class="bi bi-briefcase"></i></div>
+            <h3>Placement, Higher Studies and Entrepreneurship</h3>
+            <p class="ov-ccard-desc">Placement outcomes, higher education progression, and startup initiatives.</p>
+            <div class="card-actions">
+                <a href="{% url 'academic451_pdf' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.5 Placement & Higher Studies
+                </a>
+            </div>
+        </div>
+
+        <!-- 4.6 Placement & Higher Studies -->
+        <div class="criterion-card ov-ccard ov-c6 reveal">
+            <div class="ov-ccard-num">4.6</div>
+            <div class="card-icon"><i class="bi bi-building"></i></div>
+            <h3>Placement and Higher Studies</h3>
+            <p class="ov-ccard-desc">Detailed placement records and higher studies data for NBA-ready documentation.</p>
+            <div class="sub-criteria">
+                <a href="{% url 'placement_higher_studies_pdf' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.6 Placement and Higher Studies (40)
+                </a>
+                <a href="{% url 'placement_pdf' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.6.a Publication of tech magazines
+                </a>
+            </div>
+        </div>
+
+        <!-- 4.7 Professional Activities -->
+        <div class="criterion-card ov-ccard ov-c7 reveal">
+            <div class="ov-ccard-num">4.7</div>
+            <div class="card-icon"><i class="bi bi-award"></i></div>
+            <h3>Professional Activities</h3>
+            <p class="ov-ccard-desc">Faculty publications, professional activities, and conference participations.</p>
+            <div class="sub-criteria">
+                <a href="{% url 'professional_activity_pdf' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.7.1 Professional Activities (20)
+                </a>
+                <a href="{% url 'publication_pdf' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.7.2 Publication of tech magazines (05)
+                </a>
+                <a href="{% url 'participation_4_7_3_pdf' %}" target="_blank" class="btn-glass w-100 justify-content-start">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> 4.7.3 Participation in events (05)
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ─── CTA BANNER ─── -->
+<div class="ov-cta-banner reveal">
+    <div class="ov-cta-bg"></div>
+    <div class="ov-cta-content">
+        <i class="bi bi-lightning-charge-fill ov-cta-icon"></i>
+        <div>
+            <h3>Ready to manage Criterion 4 data?</h3>
+            <p>Head to the dashboard to add records, update results, and generate reports instantly.</p>
+        </div>
+        <a href="{% url 'dashboard' %}" class="btn-primary-glow">Open Dashboard &nbsp;→</a>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ─── Overview Hero ─── */
+.ov-hero {
+    text-align: center;
+    padding: 3.5rem 1rem 2.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.ov-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(37, 99, 235, 0.12);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    color: var(--accent-text);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+}
+
+.ov-hero-title {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 1.1;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+}
+
+.ov-hero-sub {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 620px;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+}
+
+.ov-hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ─── Stats Strip ─── */
+.ov-stats-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 1.5rem 2rem;
+    margin: 0 0 3rem;
+    flex-wrap: wrap;
+    row-gap: 1rem;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.ov-stat {
+    text-align: center;
+    padding: 0 2.5rem;
+}
+
+.ov-stat-num {
+    font-size: 2rem;
+    font-weight: 900;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+}
+
+.ov-stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.ov-stat-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--glass-border);
+    flex-shrink: 0;
+}
+
+/* ─── Problem Statement Section ─── */
+.ov-problem-section {
+    margin-bottom: 4rem;
+}
+
+.ov-problem-label {
+    margin-bottom: 2.5rem;
+}
+
+.ov-problem-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Main statement */
+.ov-ps-main {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    position: relative;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.ov-ps-quote-mark {
+    font-size: 5rem;
+    line-height: 0.5;
+    font-weight: 900;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+    font-family: Georgia, serif;
+}
+
+.ov-ps-main p {
+    font-size: 0.93rem;
+    color: var(--text-muted);
+    line-height: 1.85;
+}
+
+.ov-ps-main strong {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.ov-ps-conclusion {
+    font-size: 0.95rem !important;
+    color: var(--text-main) !important;
+    font-weight: 500;
+    padding: 1rem 1.2rem;
+    background: rgba(37, 99, 235, 0.08);
+    border-left: 3px solid var(--primary);
+    border-radius: 0 10px 10px 0;
+    margin-top: 0.5rem;
+}
+
+/* Pain points */
+.ov-pain-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.ov-pain-card {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.ov-pain-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(239, 68, 68, 0.3);
+    box-shadow: 0 12px 30px rgba(239, 68, 68, 0.08);
+}
+
+.ov-pain-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    margin-bottom: 1rem;
+}
+
+.ov-pain-card h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.ov-pain-card p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+}
+
+/* ─── Solution Section ─── */
+.ov-solution-section {
+    margin-bottom: 4rem;
+}
+
+.ov-solution-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 3rem;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.ov-solution-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ov-sf-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    transition: background 0.2s;
+}
+
+.ov-sf-item:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+.ov-sf-item > i {
+    font-size: 1.2rem;
+    color: var(--accent-text);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.ov-sf-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.ov-sf-item strong {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.ov-sf-item span {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* Solution Visual Card */
+.ov-sv-card {
+    background: var(--bg-dark);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.ov-sv-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.8rem;
+    border-radius: 10px;
+    background: rgba(37, 99, 235, 0.04);
+    border: 1px solid var(--glass-border);
+    font-size: 0.88rem;
+    color: var(--text-main);
+}
+
+.ov-sv-row i {
+    font-size: 1rem;
+    color: #22c55e;
+    flex-shrink: 0;
+}
+
+.ov-sv-row span:nth-child(2) {
+    flex: 1;
+}
+
+.ov-sv-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+    background: rgba(37, 99, 235, 0.15);
+    color: var(--accent-text);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    white-space: nowrap;
+}
+
+.ov-badge-green {
+    background: rgba(34, 197, 94, 0.12);
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.2);
+}
+
+.ov-sv-divider {
+    height: 1px;
+    background: var(--glass-border);
+    margin: 0.3rem 0;
+}
+
+.ov-sv-progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.ov-sv-pct {
+    font-weight: 700;
+    color: #22c55e !important;
+}
+
+.ov-sv-progress-bar {
+    height: 8px;
+    background: var(--glass-border);
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.ov-sv-progress-fill {
+    height: 100%;
+    width: 100%;
+    background: var(--gradient-accent);
+    border-radius: 50px;
+    animation: progress-grow 1.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.5s;
+}
+
+@keyframes progress-grow {
+    from { width: 0%; }
+    to   { width: 100%; }
+}
+
+.ov-sv-footer {
+    font-size: 0.8rem;
+    color: #22c55e;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-align: center;
+    justify-content: center;
+    padding-top: 0.3rem;
+}
+
+/* ─── Reports Section ─── */
+.ov-reports-section {
+    margin-bottom: 3rem;
+}
+
+.ov-reports-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+/* Criterion card enhancements */
+.ov-ccard {
+    position: relative;
+    overflow: hidden;
+}
+
+.ov-ccard-num {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.5rem;
+    font-size: 2.5rem;
+    font-weight: 900;
+    opacity: 0.06;
+    letter-spacing: -2px;
+    color: var(--text-main);
+    line-height: 1;
+    pointer-events: none;
+}
+
+.ov-ccard-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: 0.5rem;
+    flex-grow: 0 !important;
+}
+
+/* Per-criterion accent colors on top edge */
+.ov-ccard::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.ov-ccard:hover::after { opacity: 1; }
+.ov-c1::after { background: linear-gradient(90deg, #2563eb, #06b6d4); }
+.ov-c2::after { background: linear-gradient(90deg, #8b5cf6, #ec4899); }
+.ov-c3::after { background: linear-gradient(90deg, #06b6d4, #10b981); }
+.ov-c4::after { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+.ov-c5::after { background: linear-gradient(90deg, #10b981, #06b6d4); }
+.ov-c6::after { background: linear-gradient(90deg, #2563eb, #8b5cf6); }
+.ov-c7::after { background: linear-gradient(90deg, #f59e0b, #8b5cf6); }
+
+/* ─── CTA Banner ─── */
+.ov-cta-banner {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(37, 99, 235, 0.25);
+}
+
+.ov-cta-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.ov-cta-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem 2.5rem;
+    flex-wrap: wrap;
+}
+
+.ov-cta-icon {
+    font-size: 2.5rem;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    flex-shrink: 0;
+}
+
+.ov-cta-content > div {
+    flex: 1;
+    min-width: 200px;
+}
+
+.ov-cta-content h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 0.3rem;
+}
+
+.ov-cta-content p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+    .ov-problem-body {
+        grid-template-columns: 1fr;
+    }
+
+    .ov-solution-inner {
+        grid-template-columns: 1fr;
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .ov-pain-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ov-stats-strip {
+        gap: 1rem;
+        padding: 1.2rem;
+    }
+
+    .ov-stat-divider {
+        display: none;
+    }
+
+    .ov-stat {
+        padding: 0 1rem;
+    }
+
+    .ov-cta-content {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
