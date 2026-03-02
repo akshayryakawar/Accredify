@@ -1,0 +1,283 @@
+# 🎓 Accredify – NAAC Accreditation Management System
+
+Accredify is a Django-based NAAC Accreditation Data Management System built with PostgreSQL and Bootstrap 5.  
+It helps manage student participation, enrolment, placement, and academic performance data.
+
+---
+
+# 🚀 Tech Stack
+
+- Python 3.10+
+- Django 4.2+
+- PostgreSQL
+- Bootstrap 5
+- ReportLab (PDF generation)
+
+---
+
+# 📦 How To Setup Project On New PC (With Same Data)
+
+This guide explains how to run the project on another PC using PostgreSQL backup file:
+
+```
+accredify_backup.dump
+```
+
+---
+
+# 🖥️ STEP 1 — Install Required Software
+
+Install:
+
+1. Python (3.10 or higher)
+2. PostgreSQL (prefer same version)
+3. pgAdmin (comes with PostgreSQL)
+4. Git (optional)
+
+Verify installation:
+
+```bash
+python --version
+psql --version
+```
+
+---
+
+# 🗄️ STEP 2 — Create Empty Database
+
+Open pgAdmin:
+
+1. Expand Servers
+2. Right click **Databases**
+3. Click **Create → Database**
+4. Database Name:
+
+```
+accredify_db
+```
+
+Click Save.
+
+---
+
+# 🔄 STEP 3 — Restore Backup File
+
+1. Right click database:
+   ```
+   accredify_db
+   ```
+2. Click **Restore**
+
+Use these settings:
+
+| Option | Value |
+|--------|--------|
+| Format | Custom |
+| Filename | Select `accredify_backup.dump` |
+| Role | postgres |
+
+Click **Restore**
+
+Wait for:
+```
+Process completed successfully
+```
+
+Your old data is now restored.
+
+---
+
+# 🧪 STEP 4 — Setup Django Project
+
+Copy project folder to new PC.
+
+Open terminal inside project directory.
+
+---
+
+## Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+Activate:
+
+### Windows:
+```bash
+venv\Scripts\activate
+```
+
+### Mac/Linux:
+```bash
+source venv/bin/activate
+```
+
+---
+
+## Install Requirements
+
+```bash
+pip install -r requirements.txt
+pip install psycopg2-binary
+```
+
+---
+
+# ⚙️ STEP 5 — Configure Database (settings.py)
+
+Open:
+
+```
+naac_portal/settings.py
+```
+
+Ensure database configuration:
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'accredify_db',
+        'USER': 'postgres',
+        'PASSWORD': 'your_postgres_password',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+```
+
+Replace:
+```
+your_postgres_password
+```
+
+with your actual password.
+
+---
+
+# 🔁 STEP 6 — Run Migrations (Safe)
+
+```bash
+python manage.py migrate
+```
+
+This will only verify tables.
+
+---
+
+# ▶️ STEP 7 — Run Server
+
+```bash
+python manage.py runserver
+```
+
+Open in browser:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+# 🔐 Admin Login
+
+Use your old superuser credentials.
+
+If you forgot password:
+
+```bash
+python manage.py changepassword username
+```
+
+---
+
+# 🛠️ Alternative Backup Method (Command Line)
+
+Backup database:
+
+```bash
+pg_dump -U postgres -F c -d accredify_db -f accredify_backup.dump
+```
+
+Restore:
+
+```bash
+pg_restore -U postgres -d accredify_db accredify_backup.dump
+```
+
+If `pg_dump` not recognized on Windows:
+
+Add this to System PATH:
+
+```
+C:\Program Files\PostgreSQL\15\bin
+```
+
+(Replace version accordingly)
+
+---
+
+# ❗ Common Errors & Fixes
+
+### 1. password authentication failed
+→ Check PostgreSQL password
+
+### 2. relation does not exist
+→ Database name mismatch
+
+### 3. could not connect to server
+→ Start PostgreSQL service
+
+### 4. psycopg2 not installed
+```bash
+pip install psycopg2-binary
+```
+
+---
+
+# 🔐 Recommended (Professional Setup)
+
+Use `.env` file instead of hardcoding password.
+
+Example `.env`:
+
+```
+SECRET_KEY=your_secret_key
+DEBUG=True
+
+DB_NAME=accredify_db
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+---
+
+# 📁 Project Structure
+
+```
+Accredify/
+│
+├── accounts/
+├── criterion4/
+├── naac_portal/
+├── templates/
+├── static/
+├── manage.py
+└── requirements.txt
+```
+
+---
+
+# 👨‍💻 Developer
+
+Built for NAAC Accreditation Data Management  
+Designed for Sandip Polytechnic 🎓
+
+---
+
+# 📜 License
+
+This project is for educational and academic purposes.
