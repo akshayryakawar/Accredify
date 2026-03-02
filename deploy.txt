@@ -1,0 +1,76 @@
+Deploying NAAC Portal to Vercel (Free)
+Vercel can host your Django project for free using its Serverless Functions. Since your project uses PostgreSQL, you will also need a hosted database.
+
+1. Prepare your Django Project
+Add vercel.json
+Create a file named vercel.json in your root directory:
+
+json
+{
+  "builds": [
+    {
+      "src": "naac_portal/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "naac_portal/wsgi.py"
+    }
+  ]
+}
+
+Update wsgi.py
+Open 
+naac_portal/wsgi.py
+ and add app = application at the bottom (Vercel looks for app):
+
+python
+import os
+from django.core.wsgi import get_wsgi_application
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'naac_portal.settings')
+application = get_wsgi_application()
+app = application # Add this line
+Requirements
+Ensure all dependencies are in 
+requirements.txt
+, including python-dotenv, psycopg2-binary, and whitenoise.
+
+2. Database (Free PostgreSQL)
+Vercel doesn't include a persistent database automatically. You have two free options:
+
+Vercel Postgres: Included with Vercel (Free Tier). Easy to set up in the Vercel Dashboard.
+Supabase: Offers a generous free tier for PostgreSQL.
+3. Static Files (WhiteNoise)
+Since Vercel doesn't serve Django static files by default, you should use WhiteNoise:
+
+Install it: pip install whitenoise
+Update 
+settings.py
+ middleware:
+python
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Add this
+    ...
+]
+4. Deployment Steps
+GitHub: Push your code to a GitHub repository.
+Vercel Dashboard:
+Create a "New Project" and import your GitHub repo.
+Environment Variables: Add your 
+.env
+ variables (e.g., DB_NAME, DB_PASSWORD, SECRET_KEY) in the Vercel Dashboard settings.
+Deploy: Vercel will automatically detect the Python project and deploy it.
+Important Tips
+ALLOWED_HOSTS: Update 
+settings.py
+ to include your Vercel URL:
+python
+ALLOWED_HOSTS = ['your-project.vercel.app', 'localhost', '127.0.0.1']
+Migrations: You cannot run python manage.py migrate directly on Vercel's server. You usually run it once from your local PC pointing to the Production Database URL before the first deployment.

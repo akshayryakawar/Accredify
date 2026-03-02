@@ -243,7 +243,7 @@ class AcademicPerformanceSecondYear(models.Model):
         records = AcademicPerformanceSecondYear.last_three_records()
         if len(records) < 3:
             return 0
-        return round(sum(r.api for r in records) / 3, 2)
+        return round(sum(r.API for r in records) / 3, 2)
 
     # -------- Academic Performance Level --------
     @property

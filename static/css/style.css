@@ -598,35 +598,152 @@ section {
     z-index: 1;
 }
 
-/* ── 14. Bootstrap Table Overrides ── */
+/* ══════════════════════════════════════════════════════
+   ── 14. Bootstrap Table – Global Theme Fix ──
+   Resets ALL Bootstrap 5 internal CSS vars so every
+   table across every list page respects the dark/light
+   theme without any per-file HTML changes.
+   ══════════════════════════════════════════════════════ */
+
+/* Step 1 — Kill Bootstrap's root-level forced white bg & dark text */
 .table {
-    color: var(--text-main) !important;
-}
-
-.table thead th {
-    color: var(--text-muted) !important;
+    --bs-table-bg:             transparent;
+    --bs-table-color:          var(--text-main);
+    --bs-table-border-color:   var(--glass-border);
+    --bs-table-striped-bg:     var(--table-stripe);
+    --bs-table-striped-color:  var(--text-main);
+    --bs-table-hover-bg:       var(--table-stripe);
+    --bs-table-hover-color:    var(--text-main);
+    --bs-table-active-bg:      var(--table-stripe);
+    --bs-table-active-color:   var(--text-main);
+    --bs-table-accent-bg:      transparent;
+    color:        var(--text-main) !important;
     border-color: var(--glass-border) !important;
-    background: transparent !important;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
 }
 
-.table tbody tr {
-    border-color: var(--glass-border) !important;
-    background: transparent !important;
+/* Step 2 — The key rule: every single cell in every table */
+.table > :not(caption) > * > * {
+    color:            var(--text-main) !important;
+    background-color: transparent !important;
+    border-color:     var(--glass-border) !important;
+    box-shadow:       none !important;
 }
 
-.table tbody tr:hover {
-    background: var(--table-stripe) !important;
+/* Step 3 — thead cells: slightly muted, uppercase label style */
+.table > thead > tr > th,
+.table > thead > tr > td {
+    color:            var(--text-muted) !important;
+    background-color: transparent !important;
+    border-color:     var(--glass-border) !important;
+    font-size:        0.8rem;
+    font-weight:      600;
+    text-transform:   uppercase;
+    letter-spacing:   0.06em;
 }
 
+/* Step 4 — tbody rows */
+.table > tbody > tr {
+    border-color:     var(--glass-border) !important;
+    background-color: transparent !important;
+}
+
+/* Step 5 — hover state for all table variants */
+.table-hover > tbody > tr:hover > *,
+.table > tbody > tr:hover > * {
+    --bs-table-accent-bg: var(--table-stripe);
+    color:            var(--text-main) !important;
+    background-color: var(--table-stripe) !important;
+}
+
+/* Step 6 — striped tables */
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    --bs-table-accent-bg: var(--table-stripe);
+    color:            var(--text-main) !important;
+    background-color: var(--table-stripe) !important;
+}
+
+/* Step 7 — td / th spacing & color (belt + suspenders) */
 .table td,
 .table th {
-    border-color: var(--glass-border) !important;
-    color: var(--text-main) !important;
-    padding: 1rem 0.75rem !important;
+    color:            var(--text-main) !important;
+    background-color: transparent !important;
+    border-color:     var(--glass-border) !important;
+    padding:          1rem 0.75rem !important;
+}
+
+/* Step 8 — fix Bootstrap's badge colours used in list pages */
+/* Replace broken bg-primary-glass with a proper themed badge */
+.naac-badge,
+.badge.bg-primary-glass {
+    background:  rgba(37, 99, 235, 0.12) !important;
+    border:      1px solid rgba(37, 99, 235, 0.25);
+    color:       var(--accent-text) !important;
+    padding:     0.3rem 0.85rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size:   0.82rem;
+}
+
+/* Step 9 — fix Bootstrap utility text classes that ignore theme */
+.table .text-muted,
+.table .text-secondary {
+    color: var(--text-muted) !important;
+}
+
+.table .text-primary {
+    color: var(--accent-text) !important;
+}
+
+.table .text-danger {
+    color: #f87171 !important;
+}
+
+.table .text-success {
+    color: #4ade80 !important;
+}
+
+.table .text-warning {
+    color: #fbbf24 !important;
+}
+
+/* Step 10 — fix Bootstrap border utilities on action buttons in tables */
+.table .border-danger {
+    border-color: rgba(239, 68, 68, 0.4) !important;
+}
+
+/* Step 11 — empty state rows */
+.table td[colspan] {
+    text-align: center;
+    color: var(--text-muted) !important;
+}
+
+/* Step 12 — table-container wrapper */
+.table-container {
+    background:           var(--bg-card);
+    backdrop-filter:      blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border:               1px solid var(--glass-border);
+    border-radius:        16px;
+    padding:              2rem;
+    box-shadow:           0 8px 30px rgba(0, 0, 0, 0.15);
+    position:             relative;
+    z-index:              1;
+}
+
+/* Light theme explicit override — ensures no bleed-through */
+[data-theme="light"] .table > :not(caption) > * > * {
+    color:            var(--text-main) !important;
+    background-color: transparent !important;
+    border-color:     var(--glass-border) !important;
+}
+
+[data-theme="light"] .table > thead > tr > th {
+    color: var(--text-muted) !important;
+}
+
+[data-theme="light"] .table-hover > tbody > tr:hover > * {
+    background-color: var(--table-stripe) !important;
+    color:            var(--text-main) !important;
 }
 
 /* ── 15. Form Inputs ── */
@@ -1563,51 +1680,61 @@ footer {
         text-align: center;
     }
 }
-
-.nav-links {
-    gap: 20px;
+/*  18. Authentication Pages  */
+.auth-section {
+    position: relative;
+    overflow: hidden;
+    padding: 60px 0;
 }
 
-.top-nav {
-    overflow-x: hidden;
+.auth-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    z-index: 10;
 }
 
-.nav-links form input {
-    background: #111827;
-    border: 1px solid #1f2937;
-    color: #d1d5db;
+.input-group-glass {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.nav-links form input::placeholder {
-    color: #6b7280;
+.input-group-glass i {
+    position: absolute;
+    left: 18px;
+    color: var(--accent);
+    font-size: 1.1rem;
+    z-index: 5;
 }
 
-.btn-save i {
-    font-size: 1rem;
+.form-control-glass {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 14px;
+    padding: 14px 14px 14px 50px;
+    color: var(--input-color);
+    width: 100%;
+    transition: all 0.3s ease;
 }
 
-/* Glowing Animated Brand */
-.glow-text {
-    font-size: 1.4rem;
-    font-weight: 700;
-    background: linear-gradient(90deg, #00c6ff, #0072ff, #00c6ff);
-    background-size: 200% auto;
-
-    background-clip: text;              /* Standard property */
-    -webkit-background-clip: text;      /* Chrome / Safari */
-
-    color: transparent;                 /* Standard */
-    -webkit-text-fill-color: transparent; /* Safari */
-
-    animation: gradientMove 4s linear infinite, glowPulse 2s ease-in-out infinite alternate;
+.form-control-glass:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--btn-glass-hover-bg);
+    box-shadow: 0 0 15px var(--primary-glow);
 }
 
-@keyframes gradientMove {
-    0% { background-position: 0% center; }
-    100% { background-position: 200% center; }
-}
-
-@keyframes glowPulse {
-    0% { text-shadow: 0 0 5px rgba(0, 198, 255, 0.4); }
-    100% { text-shadow: 0 0 20px rgba(0, 198, 255, 0.9); }
+.text-gradient {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }

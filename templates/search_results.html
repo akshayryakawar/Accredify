@@ -1,26 +1,202 @@
 {% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    .naac-results-container {
+        padding: 2rem 0;
+    }
+
+    .search-title {
+        color: var(--primary);
+        font-weight: 700;
+        margin-bottom: 2rem;
+        text-shadow: 0 0 10px rgba(31, 182, 255, 0.2);
+    }
+
+    .naac-table-wrapper {
+        background: white;
+        padding: 2px;
+        border-radius: 4px;
+        overflow-x: auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .naac-table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #333 !important;
+        /* Force dark text on light background */
+        font-family: 'Inter', sans-serif;
+        font-size: 13px;
+    }
+
+    .naac-table th,
+    .naac-table td {
+        border: 1.5px solid #444;
+        padding: 12px 15px;
+        vertical-align: middle;
+    }
+
+    .naac-table th {
+        background-color: #f8f9fa;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: center;
+    }
+
+    .naac-table tr:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    .naac-table tr:hover {
+        background-color: #f0f7ff;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-start {
+        text-align: left;
+    }
+
+    .category-header {
+        background: rgba(31, 182, 255, 0.1);
+        padding: 10px 20px;
+        border-left: 4px solid var(--primary);
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        border-radius: 0 4px 4px 0;
+    }
+
+    .category-header h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    /* Badge styles for level */
+    .level-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 50px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        background: #e1f5fe;
+        color: #01579b;
+        border: 1px solid #b3e5fc;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-
-<div class="container">
-    <h2 class="h2">Search Results for "{{ query }}"</h2>
-
-    <div class="table-container">
-
-        {% for key, items in results.items %}
-            <h5 style="color:#1fb6ff;">{{ key|title }}</h5>
-
-            {% if items %}
-                <ul>
-                    {% for item in items %}
-                        <li>{{ item }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No results found.</p>
-            {% endif %}
-        {% endfor %}
-
+<div class="naac-results-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="search-title">Search Results for "{{ query }}"</h2>
+        <a href="{% url 'dashboard' %}" class="btn-primary-glow">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
     </div>
-</div>
 
+    {% for key, items in results.items %}
+    <div class="category-header">
+        <h3>
+            {% if key == 'participation' %}Student Participation Records
+            {% elif key == 'placement' %}Placement Records
+            {% elif key == 'publication' %}Publication Records
+            {% else %}{{ key|title }} Records{% endif %}
+        </h3>
+    </div>
+
+    {% if items %}
+    <div class="naac-table-wrapper">
+        <table class="naac-table">
+            <thead>
+                {% if key == 'participation' %}
+                <tr>
+                    <th style="width: 50px;">Sr. No.</th>
+                    <th>Event Name</th>
+                    <th>Date/Year</th>
+                    <th>Student Name</th>
+                    <th>Event/Organization</th>
+                    <th>Achievement/Result</th>
+                    <th>Level</th>
+                    <th>PO/PSO Details</th>
+                </tr>
+                {% elif key == 'placement' %}
+                <tr>
+                    <th style="width: 50px;">Sr. No.</th>
+                    <th>Assessment Year</th>
+                    <th>Student Name</th>
+                    <th>Enrollment No.</th>
+                    <th>Employer Name</th>
+                    <th>Appointment No.</th>
+                </tr>
+                {% elif key == 'publication' %}
+                <tr>
+                    <th style="width: 50px;">Sr. No.</th>
+                    <th>Description</th>
+                    <th>Year</th>
+                    <th>Issue No.</th>
+                    <th>Editor/Author</th>
+                </tr>
+                {% endif %}
+            </thead>
+            <tbody>
+                {% if key == 'participation' %}
+                {% for item in items %}
+                <tr>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td class="text-start fw-medium">{{ item.type_of_activity }}</td>
+                    <td class="text-center">{{ item.date|default:item.assessment_year }}</td>
+                    <td>{{ item.student_name }}</td>
+                    <td>{{ item.organizing_body }}</td>
+                    <td class="text-center">{{ item.awards }}</td>
+                    <td class="text-center"><span class="level-badge">{{ item.level }}</span></td>
+                    <td>{{ item.relevance_peos_pos }}</td>
+                </tr>
+                {% endfor %}
+                {% elif key == 'placement' %}
+                {% for item in items %}
+                <tr>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td class="text-center">{{ item.assessment_year }}</td>
+                    <td>{{ item.student_name }}</td>
+                    <td>{{ item.enrollment_no }}</td>
+                    <td>{{ item.employer_name }}</td>
+                    <td>{{ item.appointment_no }}</td>
+                </tr>
+                {% endfor %}
+                {% elif key == 'publication' %}
+                {% for item in items %}
+                <tr>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td>{{ item.publication_description }}</td>
+                    <td class="text-center">{{ item.year_of_publication }}</td>
+                    <td class="text-center">{{ item.issue_no }}</td>
+                    <td>{{ item.editor_author }}</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info glass-alert">
+        No {{ key }} records found matching your search.
+    </div>
+    {% endif %}
+    {% endfor %}
+
+    {% if not results.participation and not results.placement and not results.publication %}
+    <div class="text-center py-5">
+        <i class="bi bi-search display-1 text-muted opacity-25 mb-4 d-block"></i>
+        <h3 class="text-muted">No results found for "{{ query }}"</h3>
+        <p class="text-muted">Try searching with different keywords</p>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

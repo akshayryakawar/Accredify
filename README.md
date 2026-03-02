@@ -3,6 +3,12 @@
 A Django-based Accredify project for managing **Criterion 4** data with a modern **Admin Dashboard**, **Edit/Manage pages**, and **PDF report generation** using ReportLab.
 
 ---
+##git push cmd
+
+git add .
+git commit -m "Added gitignore"
+git push
+
 
 ## 📌 Features
 
@@ -134,6 +140,14 @@ python manage.py migrate
 #Start Server
 python manage.py runserver
 
+## 🌍 Setup on Another PC
+1. **PostgreSQL**: Install PostgreSQL and create a database named `naac_portal_db`.
+2. **Environment**: Copy `.env.example` to `.env` and update the `DB_PASSWORD`.
+3. **Initialization**: Run `python manage.py migrate` to set up tables.
+4. **Data Transfer**: Use `python manage.py dumpdata` (old PC) and `python manage.py loaddata` (new PC) to move data.
+
+Detailed instructions can be found in the project's [setup_guide.md](file:///C:/Users/AKSHAY%20RYAKAWAR/.gemini/antigravity/brain/102df16e-9266-4781-915b-63dc3dd6cd8b/setup_guide.md).
+
 ##-----Useful URLs-----##
 
 | Page                         | URL                                                  |
@@ -208,3 +222,53 @@ http://127.0.0.1:8000/publication472/add/
 http://127.0.0.1:8000/participation/add/
 http://127.0.0.1:8000/participation/list/
 
+#####Setting up NAAC Portal on Another PC  #####
+Follow these steps to get the project running on a new machine.
+
+1. Prerequisites
+Python 3.10+: Download from python.org.
+PostgreSQL: Download and install the free version from postgresql.org.
+Git: (Optional) For cloning the repository.
+2. PostgreSQL Setup
+Open pgAdmin 4.
+Right-click Databases -> Create -> Database.
+Name it naac_portal_db.
+3. Project Setup
+Copy/Clone the project folder to the new PC.
+Open a terminal in the project folder.
+Create a virtual environment:
+bash
+python -m venv venv
+Activate the virtual environment:
+Windows: venv\Scripts\activate
+Mac/Linux: source venv/bin/activate
+Install dependencies:
+bash
+pip install -r requirements.txt
+4. Environment Configuration
+Look for the file 
+.env.example
+.
+Copy it and rename the copy to 
+.env
+.
+Open 
+.env
+ and enter your PostgreSQL password:
+env
+DB_PASSWORD=your_new_password_here
+5. Initialize the Database
+Run these commands to create the tables in your new PostgreSQL database:
+
+bash
+python manage.py migrate
+6. Run the Project
+Start the development server:
+
+bash
+python manage.py runserver
+Visit http://127.0.0.1:8000/ in your browser.
+
+NOTE
+
+If you want to move your data from the old PC to the new one, use the dumpdata and loaddata commands as described in the previous migration guide.

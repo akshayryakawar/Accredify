@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.pagesizes import A4, landscape
@@ -34,6 +35,7 @@ from .models import (
     StudentParticipation,
 )
 
+@login_required
 def global_search(request):
     query = request.GET.get("q")
     results = {}
@@ -63,6 +65,8 @@ def global_search(request):
     })
 
 # ✅ PDF GENERATION (Table 4.1 - Enrolment Ratio)
+@login_required
+@login_required
 def enrolment_ratio_pdf(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="Table_4_1_Intake_Information.pdf"'
@@ -195,12 +199,14 @@ from .models import EnrolmentRatio
 from .forms import EnrolmentRatioForm
 
 # LIST VIEW
+@login_required
 def enrolment_ratio_list(request):
     data = EnrolmentRatio.objects.all().order_by("-academic_year")
     return render(request, "enrolment/list.html", {"data": data})
 
 
 # CREATE VIEW
+@login_required
 def enrolment_ratio_add(request):
     form = EnrolmentRatioForm(request.POST or None)
     if form.is_valid():
@@ -210,6 +216,7 @@ def enrolment_ratio_add(request):
 
 
 # UPDATE VIEW
+@login_required
 def enrolment_ratio_edit(request, id):
     obj = get_object_or_404(EnrolmentRatio, id=id)
     form = EnrolmentRatioForm(request.POST or None, instance=obj)
@@ -220,12 +227,14 @@ def enrolment_ratio_edit(request, id):
 
 
 # DELETE VIEW
+@login_required
 def enrolment_ratio_delete(request, id):
     obj = get_object_or_404(EnrolmentRatio, id=id)
     obj.delete()
     return redirect("enrolment_ratio_list")
 
 #4.1.1 PDF GENERATION
+@login_required
 def enrolment_ratio_pdf_4_1(request):
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = 'inline; filename="Table_4_1_1_4_1_2.pdf"'
@@ -388,12 +397,14 @@ from .forms import EnrolmentRatio411Form
 from django.shortcuts import get_object_or_404
 
 # LIST
+@login_required
 def enrolment_ratio_411_list(request):
     data = EnrolmentRatio4_1_1.objects.all().order_by("-id")
     return render(request, "enrolment411/list.html", {"data": data})
 
 
 # ADD
+@login_required
 def enrolment_ratio_411_add(request):
     form = EnrolmentRatio411Form(request.POST or None)
     if form.is_valid():
@@ -403,6 +414,7 @@ def enrolment_ratio_411_add(request):
 
 
 # EDIT
+@login_required
 def enrolment_ratio_411_edit(request, id):
     obj = get_object_or_404(EnrolmentRatio4_1_1, id=id)
     form = EnrolmentRatio411Form(request.POST or None, instance=obj)
@@ -413,6 +425,7 @@ def enrolment_ratio_411_edit(request, id):
 
 
 # DELETE
+@login_required
 def enrolment_ratio_411_delete(request, id):
     obj = get_object_or_404(EnrolmentRatio4_1_1, id=id)
     obj.delete()
@@ -423,12 +436,14 @@ from .forms import EnrolmentRatio412Form
 from django.shortcuts import get_object_or_404
 
 # LIST
+@login_required
 def enrolment_ratio_412_list(request):
     data = EnrolmentRatioMarksOnly4_1_2.objects.all().order_by("-id")
     return render(request, "enrolment412/list.html", {"data": data})
 
 
 # ADD
+@login_required
 def enrolment_ratio_412_add(request):
     form = EnrolmentRatio412Form(request.POST or None)
     if form.is_valid():
@@ -438,6 +453,7 @@ def enrolment_ratio_412_add(request):
 
 
 # EDIT
+@login_required
 def enrolment_ratio_412_edit(request, id):
     obj = get_object_or_404(EnrolmentRatioMarksOnly4_1_2, id=id)
     form = EnrolmentRatio412Form(request.POST or None, instance=obj)
@@ -448,15 +464,17 @@ def enrolment_ratio_412_edit(request, id):
 
 
 # DELETE
+@login_required
 def enrolment_ratio_412_delete(request, id):
     obj = get_object_or_404(EnrolmentRatioMarksOnly4_1_2, id=id)
     obj.delete()
     return redirect("enrolment_ratio_412_list")
 
-marks_obj = EnrolmentRatioMarksOnly4_1_2.objects.last()
+# marks_obj = EnrolmentRatioMarksOnly4_1_2.objects.last()
 
 
 # ✅ PDF GENERATION (Table 4.2 - Success Rate Without Backlogs)
+@login_required
 def success_rate_nobacklog_pdf(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="Table_4_2_No_Backlog.pdf"'
@@ -548,12 +566,14 @@ from .forms import SuccessRateStipulatedPeriodForm
 from django.shortcuts import get_object_or_404
 
 # LIST
+@login_required
 def success_rate_stipulated_list(request):
     data = SuccessRateStipulatedPeriod.objects.all().order_by("-id")
     return render(request, "successrate/list.html", {"data": data})
 
 
 # ADD
+@login_required
 def success_rate_stipulated_add(request):
     form = SuccessRateStipulatedPeriodForm(request.POST or None)
     if form.is_valid():
@@ -563,6 +583,7 @@ def success_rate_stipulated_add(request):
 
 
 # EDIT
+@login_required
 def success_rate_stipulated_edit(request, id):
     obj = get_object_or_404(SuccessRateStipulatedPeriod, id=id)
     form = SuccessRateStipulatedPeriodForm(request.POST or None, instance=obj)
@@ -573,14 +594,16 @@ def success_rate_stipulated_edit(request, id):
 
 
 # DELETE
+@login_required
 def success_rate_stipulated_delete(request, id):
     obj = get_object_or_404(SuccessRateStipulatedPeriod, id=id)
     obj.delete()
     return redirect("success_rate_stipulated_list")
 
-SuccessRateStipulatedPeriod.objects.all()
+# SuccessRateStipulatedPeriod.objects.all()
 
 # ✅ PDF GENERATION (Table 4.3 - students passed with backlogs )
+@login_required
 def students_passed_with_backlogs_pdf(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="Table_4_2_No_Backlog.pdf"'
@@ -669,11 +692,13 @@ from django.shortcuts import get_object_or_404
 # 4.3 Students With Backlogs
 # ==========================
 
+@login_required
 def backlog_list(request):
     data = studentspassedwithbacklogs.objects.all().order_by("-id")
     return render(request, "backlog43/list.html", {"data": data})
 
 
+@login_required
 def backlog_add(request):
     form = StudentsPassedWithBacklogsForm(request.POST or None)
     if form.is_valid():
@@ -682,6 +707,7 @@ def backlog_add(request):
     return render(request, "backlog43/form.html", {"form": form})
 
 
+@login_required
 def backlog_edit(request, id):
     obj = get_object_or_404(studentspassedwithbacklogs, id=id)
     form = StudentsPassedWithBacklogsForm(request.POST or None, instance=obj)
@@ -691,6 +717,7 @@ def backlog_edit(request, id):
     return render(request, "backlog43/form.html", {"form": form})
 
 
+@login_required
 def backlog_delete(request, id):
     obj = get_object_or_404(studentspassedwithbacklogs, id=id)
     obj.delete()
@@ -705,6 +732,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from .models import AcademicPerformance4_3_1
 
 
+@login_required
 def academic_performance_pdf_4_3_1(request):
 
     from django.http import HttpResponse
@@ -780,7 +808,7 @@ def academic_performance_pdf_4_3_1(request):
     doc.build(elements)
     return response
 
-AcademicPerformance4_3_1.objects.order_by("-year_label")
+# AcademicPerformance4_3_1.objects.order_by("-year_label")
 
 from .forms import AcademicPerformance431Form
 from .models import AcademicPerformance4_3_1
@@ -791,6 +819,7 @@ from django.shortcuts import get_object_or_404
 # 4.3.1 Academic Performance
 # ==========================
 
+@login_required
 def academic431_list(request):
     data = AcademicPerformance4_3_1.objects.all().order_by("-year_label")
     
@@ -809,6 +838,7 @@ def academic431_list(request):
     })
 
 
+@login_required
 def academic431_add(request):
     form = AcademicPerformance431Form(request.POST or None)
     if form.is_valid():
@@ -817,6 +847,7 @@ def academic431_add(request):
     return render(request, "academic431/form.html", {"form": form})
 
 
+@login_required
 def academic431_edit(request, id):
     obj = get_object_or_404(AcademicPerformance4_3_1, id=id)
     form = AcademicPerformance431Form(request.POST or None, instance=obj)
@@ -826,12 +857,13 @@ def academic431_edit(request, id):
     return render(request, "academic431/form.html", {"form": form})
 
 
+@login_required
 def academic431_delete(request, id):
     obj = get_object_or_404(AcademicPerformance4_3_1, id=id)
     obj.delete()
     return redirect("academic431_list")
 
-AcademicPerformance4_3_1.objects.all()
+# AcademicPerformance4_3_1.objects.all()
 
 #4.6
 from django.http import HttpResponse
@@ -843,6 +875,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from .models import PlacementandHigherStudies
 
 
+@login_required
 def placement_higher_studies_pdf(request):
 
     from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
@@ -947,11 +980,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.shortcuts import render, redirect, get_object_or_404
 
 # LIST
+@login_required
 def placement_list(request):
     data = PlacementandHigherStudies.objects.all().order_by("-id")
     return render(request, "placement/list.html", {"data": data})
 
 # ADD
+@login_required
 def placement_add(request):
     form = PlacementandHigherStudiesForm(request.POST or None)
     if form.is_valid():
@@ -960,6 +995,7 @@ def placement_add(request):
     return render(request, "placement/form.html", {"form": form})
 
 # EDIT
+@login_required
 def placement_edit(request, id):
     obj = get_object_or_404(PlacementandHigherStudies, id=id)
     form = PlacementandHigherStudiesForm(request.POST or None, instance=obj)
@@ -969,6 +1005,7 @@ def placement_edit(request, id):
     return render(request, "placement/form.html", {"form": form})
 
 # DELETE
+@login_required
 def placement_delete(request, id):
     obj = get_object_or_404(PlacementandHigherStudies, id=id)
     obj.delete()
@@ -983,6 +1020,7 @@ from reportlab.lib.pagesizes import A4
 from .models import PlacementRecord
 
 
+@login_required
 def placement_pdf(request):
 
     response = HttpResponse(content_type="application/pdf")
@@ -1046,11 +1084,13 @@ from django.shortcuts import get_object_or_404
 # 4.6.a Placement Records
 # ==========================
 
+@login_required
 def placement_list1(request):
     data = PlacementRecord.objects.all().order_by("-assessment_year")
     return render(request, "placement46a/list.html", {"data": data})
 
 
+@login_required
 def placement_add1(request):
     form = PlacementRecordForm(request.POST or None)
     if form.is_valid():
@@ -1059,6 +1099,7 @@ def placement_add1(request):
     return render(request, "placement46a/form.html", {"form": form})
 
 
+@login_required
 def placement_edit1(request, id):
     obj = get_object_or_404(PlacementRecord, id=id)
     form = PlacementRecordForm(request.POST or None, instance=obj)
@@ -1068,12 +1109,13 @@ def placement_edit1(request, id):
     return render(request, "placement46a/form.html", {"form": form})
 
 
+@login_required
 def placement_delete1(request, id):
     obj = get_object_or_404(PlacementRecord, id=id)
     obj.delete()
     return redirect("placement_list1")
 
-PlacementRecord.objects.filter(assessment_year=...)
+# PlacementRecord.objects.filter(assessment_year=...)
 
 
 #4.4.1
@@ -1085,6 +1127,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 
 from .models import AcademicPerformanceSecondYear
 
+@login_required
 def academic_performance_pdf(request):
 
     response = HttpResponse(content_type='application/pdf')
@@ -1178,6 +1221,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # 4.4 Academic Performance (Second Year)
 # ==========================
 
+@login_required
 def second_year_list(request):
     data = AcademicPerformanceSecondYear.objects.all().order_by("-year")
 
@@ -1196,6 +1240,7 @@ def second_year_list(request):
     })
 
 
+@login_required
 def second_year_add(request):
     form = AcademicPerformanceSecondYearForm(request.POST or None)
     if form.is_valid():
@@ -1204,6 +1249,7 @@ def second_year_add(request):
     return render(request, "academic44/form.html", {"form": form})
 
 
+@login_required
 def second_year_edit(request, id):
     obj = get_object_or_404(AcademicPerformanceSecondYear, id=id)
     form = AcademicPerformanceSecondYearForm(request.POST or None, instance=obj)
@@ -1213,6 +1259,7 @@ def second_year_edit(request, id):
     return render(request, "academic44/form.html", {"form": form})
 
 
+@login_required
 def second_year_delete(request, id):
     obj = get_object_or_404(AcademicPerformanceSecondYear, id=id)
     obj.delete()
@@ -1224,6 +1271,7 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.styles import getSampleStyleSheet
 
+@login_required
 def success_rate_combined_pdf(request):
 
     from django.http import HttpResponse
@@ -1339,11 +1387,13 @@ from .models import SuccessRate, SuccessRateWithBacklogs
 # 4.2.1 – WITHOUT BACKLOG
 # ==========================
 
+@login_required
 def success_rate_list(request):
     data = SuccessRate.objects.all().order_by("-year_label")
     return render(request, "success421/list.html", {"data": data})
 
 
+@login_required
 def success_rate_add(request):
     form = SuccessRateForm(request.POST or None)
     if form.is_valid():
@@ -1352,6 +1402,7 @@ def success_rate_add(request):
     return render(request, "success421/form.html", {"form": form})
 
 
+@login_required
 def success_rate_edit(request, id):
     obj = get_object_or_404(SuccessRate, id=id)
     form = SuccessRateForm(request.POST or None, instance=obj)
@@ -1361,6 +1412,7 @@ def success_rate_edit(request, id):
     return render(request, "success421/form.html", {"form": form})
 
 
+@login_required
 def success_rate_delete(request, id):
     obj = get_object_or_404(SuccessRate, id=id)
     obj.delete()
@@ -1370,11 +1422,13 @@ def success_rate_delete(request, id):
 # 4.2.2 – WITH BACKLOG
 # ==========================
 
+@login_required
 def success_rate_backlog_list(request):
     data = SuccessRateWithBacklogs.objects.all().order_by("-year_label")
     return render(request, "success422/list.html", {"data": data})
 
 
+@login_required
 def success_rate_backlog_add(request):
     form = SuccessRateWithBacklogsForm(request.POST or None)
     if form.is_valid():
@@ -1383,6 +1437,7 @@ def success_rate_backlog_add(request):
     return render(request, "success422/form.html", {"form": form})
 
 
+@login_required
 def success_rate_backlog_edit(request, id):
     obj = get_object_or_404(SuccessRateWithBacklogs, id=id)
     form = SuccessRateWithBacklogsForm(request.POST or None, instance=obj)
@@ -1392,6 +1447,7 @@ def success_rate_backlog_edit(request, id):
     return render(request, "success422/form.html", {"form": form})
 
 
+@login_required
 def success_rate_backlog_delete(request, id):
     obj = get_object_or_404(SuccessRateWithBacklogs, id=id)
     obj.delete()
@@ -1416,6 +1472,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from .models import ProfessionalActivity
 
 
+@login_required
 def professional_activity_pdf(request):
 
     response = HttpResponse(content_type="application/pdf")
@@ -1505,11 +1562,13 @@ from .forms import ProfessionalActivityForm
 from django.shortcuts import get_object_or_404
 
 # LIST
+@login_required
 def professional_activity_list(request):
     data = ProfessionalActivity.objects.all().order_by("-assessment_year")
     return render(request, "professional/list.html", {"data": data})
 
 # ADD
+@login_required
 def professional_activity_add(request):
     form = ProfessionalActivityForm(request.POST or None)
     if form.is_valid():
@@ -1518,6 +1577,7 @@ def professional_activity_add(request):
     return render(request, "professional/form.html", {"form": form})
 
 # EDIT
+@login_required
 def professional_activity_edit(request, id):
     obj = get_object_or_404(ProfessionalActivity, id=id)
     form = ProfessionalActivityForm(request.POST or None, instance=obj)
@@ -1527,6 +1587,7 @@ def professional_activity_edit(request, id):
     return render(request, "professional/form.html", {"form": form})
 
 # DELETE
+@login_required
 def professional_activity_delete(request, id):
     obj = get_object_or_404(ProfessionalActivity, id=id)
     obj.delete()
@@ -1542,6 +1603,7 @@ from reportlab.lib.units import inch
 from .models import Publication
 
 
+@login_required
 def publication_pdf(request):
 
     response = HttpResponse(content_type="application/pdf")
@@ -1637,11 +1699,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 # 4.7.2 Publications
 # ==========================
 
+@login_required
 def publication_list1(request):
     data = Publication.objects.all().order_by("-year_of_publication")
     return render(request, "publication472/list.html", {"data": data})
 
 
+@login_required
 def publication_add1(request):
     form = PublicationForm(request.POST or None)
     if form.is_valid():
@@ -1650,6 +1714,7 @@ def publication_add1(request):
     return render(request, "publication472/form.html", {"form": form})
 
 
+@login_required
 def publication_edit1(request, id):
     obj = get_object_or_404(Publication, id=id)
     form = PublicationForm(request.POST or None, instance=obj)
@@ -1659,6 +1724,7 @@ def publication_edit1(request, id):
     return render(request, "publication472/form.html", {"form": form})
 
 
+@login_required
 def publication_delete1(request, id):
     obj = get_object_or_404(Publication, id=id)
     obj.delete()
@@ -1674,6 +1740,7 @@ from reportlab.lib.units import inch
 from .models import StudentParticipation
 
 
+@login_required
 def participation_4_7_3_pdf(request):
 
     response = HttpResponse(content_type="application/pdf")
@@ -1804,11 +1871,24 @@ from .forms import StudentParticipationForm
 from django.shortcuts import redirect, get_object_or_404
 
 # LIST VIEW
+@login_required
 def participation_list(request):
-    data = StudentParticipation.objects.all().order_by("-assessment_year")
-    return render(request, "participation/list.html", {"data": data})
+    query = request.GET.get("q")
+    if query:
+        data = StudentParticipation.objects.filter(
+            Q(student_name__icontains=query) |
+            Q(type_of_activity__icontains=query) |
+            Q(organizing_body__icontains=query) |
+            Q(level__icontains=query) |
+            Q(assessment_year__icontains=query)
+        ).order_by("-id")
+    else:
+        data = StudentParticipation.objects.all().order_by("-id")
+    
+    return render(request, "participation/list.html", {"data": data, "query": query})
 
 # CREATE VIEW
+@login_required
 def participation_add(request):
     form = StudentParticipationForm(request.POST or None)
     if form.is_valid():
@@ -1817,6 +1897,7 @@ def participation_add(request):
     return render(request, "participation/form.html", {"form": form})
 
 # UPDATE VIEW
+@login_required
 def participation_edit(request, id):
     obj = get_object_or_404(StudentParticipation, id=id)
     form = StudentParticipationForm(request.POST or None, instance=obj)
@@ -1826,6 +1907,7 @@ def participation_edit(request, id):
     return render(request, "participation/form.html", {"form": form})
 
 # DELETE VIEW
+@login_required
 def participation_delete(request, id):
     obj = get_object_or_404(StudentParticipation, id=id)
     obj.delete()
@@ -1842,6 +1924,7 @@ from reportlab.lib.styles import ParagraphStyle
 
 
 
+@login_required
 def academic451_pdf(request):
 
     response = HttpResponse(content_type="application/pdf")
@@ -1918,6 +2001,7 @@ from .forms import AcademicPerformance451Form
 # 4.5 Academic Performance Final Year
 # ==============================
 
+@login_required
 def academic451_list1(request):
     data = AcademicPerformance4_5_1.objects.all().order_by("-year")
 
@@ -1936,6 +2020,7 @@ def academic451_list1(request):
     })
 
 
+@login_required
 def academic451_add1(request):
     form = AcademicPerformance451Form(request.POST or None)
     if form.is_valid():
@@ -1944,6 +2029,7 @@ def academic451_add1(request):
     return render(request, "academic451/form.html", {"form": form})
 
 
+@login_required
 def academic451_edit1(request, id):
     obj = get_object_or_404(AcademicPerformance4_5_1, id=id)
     form = AcademicPerformance451Form(request.POST or None, instance=obj)
@@ -1953,6 +2039,7 @@ def academic451_edit1(request, id):
     return render(request, "academic451/form.html", {"form": form})
 
 
+@login_required
 def academic451_delete1(request, id):
     obj = get_object_or_404(AcademicPerformance4_5_1, id=id)
     obj.delete()
@@ -1960,6 +2047,8 @@ def academic451_delete1(request, id):
 
 
 #------------------DASHBOARD-------------------#
+@login_required
+@login_required
 def dashboard(request):
 
     from .models import (
