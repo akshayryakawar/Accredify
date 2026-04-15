@@ -2098,7 +2098,7 @@ from .models import (
     AcademicPerformance4_3_1, AcademicPerformanceSecondYear, AcademicPerformance4_5_1,
     SuccessRate, SuccessRateWithBacklogs,
     PlacementandHigherStudies, PlacementRecord,
-    ProfessionalActivity, Publication, StudentParticipation,
+    ProfessionalActivity, Publication, StudentParticipation
 )
 
 @login_required
@@ -2115,326 +2115,283 @@ def full_report_pdf(request):
     doc = SimpleDocTemplate(response, pagesize=A4,
         leftMargin=LM, rightMargin=RM, topMargin=TM, bottomMargin=BM + 8*mm)
 
-    DARK_BLUE  = colors.HexColor('#1B3A6B')
-    MID_BLUE   = colors.HexColor('#2E6DA4')
-    LIGHT_BLUE = colors.HexColor('#D6E4F0')
-    ACCENT     = colors.HexColor('#F0A500')
-    GREY_ROW   = colors.HexColor('#F2F7FB')
-    WHITE      = colors.white
+    BLACK = colors.black
+    WHITE = colors.white
 
     def _s(name, **kw): return ParagraphStyle(name, **kw)
-    S_TH  = _s('TH',  fontName='Helvetica-Bold',  fontSize=8, textColor=WHITE,    alignment=TA_CENTER, leading=10)
-    S_TC  = _s('TC',  fontName='Helvetica',         fontSize=8, alignment=TA_CENTER, leading=10)
-    S_TCL = _s('TCL', fontName='Helvetica',         fontSize=8, alignment=TA_LEFT,   leading=10)
-    S_TCB = _s('TCB', fontName='Helvetica-Bold',    fontSize=8, alignment=TA_CENTER, leading=10)
-    S_F   = _s('F',   fontName='Helvetica-Oblique', fontSize=9, textColor=MID_BLUE,  spaceBefore=3, spaceAfter=3)
-    S_B   = _s('B',   fontName='Helvetica',         fontSize=9, leading=13, spaceBefore=2, spaceAfter=2)
-    S_CAP = _s('CAP', fontName='Helvetica-Oblique', fontSize=8, textColor=DARK_BLUE, alignment=TA_CENTER, spaceBefore=2, spaceAfter=8)
-    S_NOTE= _s('N',   fontName='Helvetica-Oblique', fontSize=8, textColor=colors.HexColor('#555555'))
-    S_H2  = _s('H2',  fontName='Helvetica-Bold',    fontSize=11, textColor=DARK_BLUE, spaceBefore=10, spaceAfter=4)
+    S_TH  = _s('TH',  fontName='Helvetica-Bold',  fontSize=10, textColor=BLACK, alignment=TA_CENTER, leading=12)
+    S_TC  = _s('TC',  fontName='Helvetica',         fontSize=9, alignment=TA_CENTER, leading=11)
+    S_TCL = _s('TCL', fontName='Helvetica',         fontSize=9, alignment=TA_LEFT,   leading=11)
+    S_TCB = _s('TCB', fontName='Helvetica-Bold',    fontSize=9, alignment=TA_CENTER, leading=11)
+    S_B   = _s('B',   fontName='Helvetica',         fontSize=10, leading=14, spaceBefore=4, spaceAfter=4)
+    S_H1  = _s('H1',  fontName='Helvetica-Bold',    fontSize=16, alignment=TA_CENTER, spaceAfter=20)
+    S_H2  = _s('H2',  fontName='Helvetica-Bold',    fontSize=13, spaceBefore=15, spaceAfter=10)
+    S_H3  = _s('H3',  fontName='Helvetica-Bold',    fontSize=11, spaceBefore=10, spaceAfter=6)
+    S_CAP = _s('CAP', fontName='Helvetica-Bold',    fontSize=10, alignment=TA_CENTER, spaceBefore=6, spaceAfter=10)
+    
+    # Wrap style for long text
+    S_WRAP = _s('WRAP', fontName='Helvetica', fontSize=8, leading=10, alignment=TA_LEFT)
 
     def th(t):   return Paragraph(str(t), S_TH)
     def tc(t):   return Paragraph('' if t is None else str(t), S_TC)
     def tcl(t):  return Paragraph('' if t is None else str(t), S_TCL)
     def tcb(t):  return Paragraph('' if t is None else str(t), S_TCB)
+    def tw(t):   return Paragraph('' if t is None else str(t), S_WRAP)
     def sp(n=4): return Spacer(1, n)
-    def bc(t, c=DARK_BLUE):
-        return Paragraph(f'<b>{t}</b>', _s('BC', fontName='Helvetica-Bold', fontSize=9, alignment=TA_CENTER, textColor=c))
 
     BASE_TS = [
-        ('BACKGROUND',(0,0),(-1,0),DARK_BLUE), ('TEXTCOLOR',(0,0),(-1,0),WHITE),
-        ('FONTNAME',(0,0),(-1,0),'Helvetica-Bold'), ('FONTSIZE',(0,0),(-1,-1),8),
-        ('ALIGN',(0,0),(-1,-1),'CENTER'), ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
-        ('ROWBACKGROUNDS',(0,1),(-1,-1),[WHITE,GREY_ROW]),
-        ('GRID',(0,0),(-1,-1),0.4,colors.HexColor('#AAAAAA')),
-        ('TOPPADDING',(0,0),(-1,-1),4), ('BOTTOMPADDING',(0,0),(-1,-1),4),
-        ('LEFTPADDING',(0,0),(-1,-1),4), ('RIGHTPADDING',(0,0),(-1,-1),4),
+        ('GRID', (0,0), (-1,-1), 0.5, BLACK),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('FONTSIZE', (0,0), (-1,-1), 9),
+        ('TOPPADDING', (0,0), (-1,-1), 4),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
     ]
-
-    def mt(data, cw, extra=None):
-        return Table(data, colWidths=cw, style=TableStyle(BASE_TS+(extra or [])), repeatRows=1)
-
-    def sec(txt, mark=''):
-        return Table([[
-            Paragraph(txt, _s('SH', fontName='Helvetica-Bold', fontSize=12, textColor=WHITE, leftIndent=6)),
-            Paragraph(mark, _s('M', fontName='Helvetica-Bold', fontSize=12, textColor=ACCENT, alignment=TA_CENTER))
-        ]], colWidths=[W-2.8*cm, 2.8*cm],
-        style=TableStyle([('BACKGROUND',(0,0),(-1,-1),DARK_BLUE),('VALIGN',(0,0),(-1,-1),'MIDDLE'),
-                           ('TOPPADDING',(0,0),(-1,-1),7),('BOTTOMPADDING',(0,0),(-1,-1),7),
-                           ('LEFTPADDING',(0,0),(0,0),8)]))
-
-    def sub(txt):
-        return Table([[Paragraph(txt, _s('SBH', fontName='Helvetica-Bold', fontSize=10, textColor=WHITE, leftIndent=4))]],
-            colWidths=[W], style=TableStyle([('BACKGROUND',(0,0),(-1,-1),MID_BLUE),
-                                              ('TOPPADDING',(0,0),(-1,-1),5),('BOTTOMPADDING',(0,0),(-1,-1),5)]))
-
-    def cbox(rows):
-        return Table([[tcl(r[0]), tcb('='), tcl(r[2])] for r in rows],
-            colWidths=[8*cm,1*cm,8*cm],
-            style=TableStyle([('BACKGROUND',(0,0),(-1,-1),LIGHT_BLUE),('FONTSIZE',(0,0),(-1,-1),9),
-                               ('TOPPADDING',(0,0),(-1,-1),3),('BOTTOMPADDING',(0,0),(-1,-1),3),
-                               ('LEFTPADDING',(0,0),(-1,-1),6)]))
-
-    def tail_extra(data, n, nc):
-        out = []
-        L = len(data)
-        for i in range(n):
-            row = L - n + i
-            if nc > 1:
-                out += [('SPAN',(1,row),(nc,row)),('BACKGROUND',(1,row),(nc,row),LIGHT_BLUE)]
-        return out
 
     def on_page(canvas, doc):
         canvas.saveState()
-        canvas.setFillColor(DARK_BLUE)
-        canvas.rect(LM, 10*mm, W, 6*mm, fill=1, stroke=0)
-        canvas.setFillColor(WHITE)
-        canvas.setFont('Helvetica', 7.5)
-        canvas.drawString(LM+4, 11.5*mm, "Criterion 4 - Students' Performance")
-        canvas.drawRightString(LM+W-4, 11.5*mm, f'Page {doc.page}')
-        canvas.setFillColor(ACCENT)
-        canvas.rect(LM, PAGE_H-TM+1, W, 3, fill=1, stroke=0)
+        canvas.setFont('Helvetica', 8)
+        canvas.drawRightString(PAGE_W - RM, 10*mm, f'Page {doc.page}')
         canvas.restoreState()
 
     story = []
 
-    # COVER
-    story += [Table([
-        [Paragraph('CRITERION 4', _s('T',fontName='Helvetica-Bold',fontSize=20,textColor=WHITE,alignment=TA_CENTER))],
-        [Paragraph("STUDENTS' PERFORMANCE", _s('S',fontName='Helvetica-Bold',fontSize=13,textColor=WHITE,alignment=TA_CENTER))],
-        [Paragraph('Total Marks: 200', _s('X',fontName='Helvetica',fontSize=11,textColor=ACCENT,alignment=TA_CENTER))],
-        [Paragraph(f'Generated: {date.today().strftime("%d %B %Y")}', _s('D',fontName='Helvetica',fontSize=9,textColor=colors.HexColor('#AACCEE'),alignment=TA_CENTER))],
-    ], colWidths=[W], style=TableStyle([('BACKGROUND',(0,0),(-1,-1),DARK_BLUE),
-                                         ('TOPPADDING',(0,0),(-1,-1),10),('BOTTOMPADDING',(0,0),(-1,-1),10)])), sp(10)]
+    # 1. COVER / TITLE
+    story += [
+        Paragraph('CRITERION 4', S_H1),
+        Paragraph("STUDENTS’ PERFORMANCE", S_H1),
+        Paragraph('200', S_TH),
+        sp(20)
+    ]
 
-    # TABLE 4.1 INTAKE
-    story += [Paragraph('Intake Information:', S_H2),
-              Paragraph('Table No. 4.1 shows the intake information.', S_B), sp(4)]
+    # 4.1 INTAKE
+    story += [
+        Paragraph('Intake Information:', S_B),
+        Paragraph('Following Table No. 4.1 shows the intake information', S_B),
+        sp(4)
+    ]
     er6 = list(EnrolmentRatio.objects.order_by('-academic_year')[:6])
     while len(er6) < 6: er6.append(None)
-    def ev(i,f): r=er6[i]; return getattr(r,f,'—') if r else '—'
-    def yl(i):   r=er6[i]; return r.academic_year if r else '—'
-    story += [mt([
-        [th('Item'),th('Academic Year'),'','','','',''],
-        ['',th(yl(0)),th(yl(1)),th(yl(2)),th(yl(3)),th(yl(4)),th(yl(5))],
-        [tcl('Sanctioned Intake (N)'),tc(ev(0,'sanctioned_intake')),tc(ev(1,'sanctioned_intake')),tc(ev(2,'sanctioned_intake')),tc(ev(3,'sanctioned_intake')),tc(ev(4,'sanctioned_intake')),tc(ev(5,'sanctioned_intake'))],
-        [tcl('1st Year Admitted (N1)'),tc(ev(0,'first_year_admitted')),tc(ev(1,'first_year_admitted')),tc(ev(2,'first_year_admitted')),tc(ev(3,'first_year_admitted')),tc(ev(4,'first_year_admitted')),tc(ev(5,'first_year_admitted'))],
-        [tcl('Lateral Entry (N2)'),tc(ev(0,'lateral_entry')),tc(ev(1,'lateral_entry')),tc(ev(2,'lateral_entry')),tc(ev(3,'lateral_entry')),tc(ev(4,'lateral_entry')),tc(ev(5,'lateral_entry'))],
-        [tcl('Separate Division (N3)'),tc(ev(0,'separate_division')),tc(ev(1,'separate_division')),tc(ev(2,'separate_division')),tc(ev(3,'separate_division')),tc(ev(4,'separate_division')),tc(ev(5,'separate_division'))],
-        [tcl('Total Admitted'),tcb(ev(0,'total_admitted')),tcb(ev(1,'total_admitted')),tcb(ev(2,'total_admitted')),tcb(ev(3,'total_admitted')),tcb(ev(4,'total_admitted')),tcb(ev(5,'total_admitted'))],
-    ],[6*cm,2.3*cm,2.3*cm,2.3*cm,2.3*cm,2.3*cm,2.3*cm],
-    [('SPAN',(0,0),(0,1)),('SPAN',(1,0),(6,0)),('BACKGROUND',(1,0),(6,0),MID_BLUE),('BACKGROUND',(0,0),(0,1),DARK_BLUE)]),
-    Paragraph('Table No. 4.1 : Intake Information', S_CAP)]
+    
+    def ev(i,f): r=er6[i]; return getattr(r,f,'-') if r else '-'
+    def yl(i):   
+        r=er6[i]
+        if not r: return '-'
+        prefix = "CAY" if i==0 else f"CAY m{i}"
+        return f"{prefix}\n({r.academic_year})"
 
-    # TABLE 4.2 WITHOUT BACKLOGS
-    story += [Paragraph('Table No. 4.2 — Passed without backlogs.', S_B), sp(4)]
-    t42 = [[th('Year of Entry'),th('N1+N2+N3'),th('I Year'),th('II Year'),th('III Year')]]
+    data41 = [
+        [th('Item'), th('Academic Year'), '', '', '', '', ''],
+        ['', th(yl(0)), th(yl(1)), th(yl(2)), th(yl(3)), th(yl(4)), th(yl(5))],
+        [tcl('Sanctioned intake strength of the program (N)'), tc(ev(0,'sanctioned_intake')), tc(ev(1,'sanctioned_intake')), tc(ev(2,'sanctioned_intake')), tc(ev(3,'sanctioned_intake')), tc(ev(4,'sanctioned_intake')), tc(ev(5,'sanctioned_intake'))],
+        [tcl('Total number of students, admitted through state level counseling (N1)'), tc(ev(0,'first_year_admitted')), tc(ev(1,'first_year_admitted')), tc(ev(2,'first_year_admitted')), tc(ev(3,'first_year_admitted')), tc(ev(4,'first_year_admitted')), tc(ev(5,'first_year_admitted'))],
+        [tcl('Number of students, admitted through Institute level quota (N2)'), tc(ev(0,'lateral_entry')), tc(ev(1,'lateral_entry')), tc(ev(2,'lateral_entry')), tc(ev(3,'lateral_entry')), tc(ev(4,'lateral_entry')), tc(ev(5,'lateral_entry'))],
+        [tcl('Number of students, admitted through lateral entry (N3)'), tc(ev(0,'separate_division')), tc(ev(1,'separate_division')), tc(ev(2,'separate_division')), tc(ev(3,'separate_division')), tc(ev(4,'separate_division')), tc(ev(5,'separate_division'))],
+        [tcl('Total number of students admitted in the Program (N1 + N2 + N3)'), tcb(ev(0,'total_admitted')), tcb(ev(1,'total_admitted')), tcb(ev(2,'total_admitted')), tcb(ev(3,'total_admitted')), tcb(ev(4,'total_admitted')), tcb(ev(5,'total_admitted'))],
+    ]
+    ts41 = BASE_TS + [('SPAN',(0,0),(0,1)), ('SPAN',(1,0),(6,0))]
+    story += [Table(data41, colWidths=[6*cm, 2.3*cm, 2.3*cm, 2.3*cm, 2.3*cm, 2.3*cm, 2.3*cm], style=TableStyle(ts41)),
+              Paragraph('Table No. 4.1 : Intake Information', S_CAP), sp(15)]
+
+    # 4.2 PASSED WITHOUT BACKLOGS
+    story += [
+        Paragraph('Following Table No. 4.2 Number of students passed without backlogs in stipulated year of study', S_B),
+        sp(4)
+    ]
+    data42 = [[th('Year of entry'), th('N1 + N2 + N3\n(As defined above)'), th('Number of students who have successfully passed without backlogs in any year of study'), '', ''],
+              ['', '', th('I Year'), th('II Year'), th('III Year')]]
     for r in SuccessRateStipulatedPeriod.objects.order_by('-year_of_entry'):
-        t42.append([tcl(r.year_of_entry),tc(r.n1_n2_n3_total),tc(r.passed_year_1),tc(r.passed_year_2),tc(r.passed_year_3)])
-    story += [mt(t42,[6.5*cm,3*cm,2.5*cm,2.5*cm,2.5*cm]),
-              Paragraph('Table No. 4.2 : Passed without backlogs', S_CAP),
-              Paragraph('<i>LYG = Last Year Graduate</i>', S_NOTE), sp(6)]
+        data42.append([tcl(r.year_of_entry), tc(r.n1_n2_n3_total), tc(r.passed_year_1), tc(r.passed_year_2), tc(r.passed_year_3)])
+    ts42 = BASE_TS + [('SPAN',(0,0),(0,1)), ('SPAN',(1,0),(1,1)), ('SPAN',(2,0),(4,0))]
+    story += [Table(data42, colWidths=[3*cm, 4*cm, 3.5*cm, 3.5*cm, 3.5*cm], style=TableStyle(ts42)),
+              Paragraph('Table No. 4.2 : Number of students passed without backlogs in stipulated year of study', S_CAP),
+              Paragraph('LYG : Last Year Graduate', S_B), sp(10)]
 
-    # TABLE 4.3 WITH BACKLOGS
-    story += [Paragraph('Table No. 4.3 — Passed with backlogs.', S_B), sp(4)]
-    t43 = [[th('Year of Entry'),th('N1+N2+N3'),th('I Year'),th('II Year'),th('III Year')]]
+    # 4.3 PASSED WITH BACKLOGS
+    story += [
+        Paragraph('Following Table No. 4.3 shows number of students passed with backlogs in stipulated year of study.', S_B),
+        sp(4)
+    ]
+    data43 = [[th('Year of entry'), th('N1 + N2 + N3\n(As defined above)'), th('Number of students who have successfully passed (Students with backlog in stipulated period of study)'), '', ''],
+              ['', '', th('I Year'), th('II Year'), th('III Year')]]
     for r in studentspassedwithbacklogs.objects.order_by('-year_of_entry'):
-        t43.append([tcl(r.year_of_entry),tc(r.n1_n2_n3_total),tc(r.passed_year_1),tc(r.passed_year_2),tc(r.passed_year_3)])
-    story += [mt(t43,[6.5*cm,3*cm,2.5*cm,2.5*cm,2.5*cm]),
-              Paragraph('Table No. 4.3 : Passed with backlogs', S_CAP), sp(8)]
+        data43.append([tcl(r.year_of_entry), tc(r.n1_n2_n3_total), tc(r.passed_year_1), tc(r.passed_year_2), tc(r.passed_year_3)])
+    ts43 = BASE_TS + [('SPAN',(0,0),(0,1)), ('SPAN',(1,0),(1,1)), ('SPAN',(2,0),(4,0))]
+    story += [Table(data43, colWidths=[3*cm, 4*cm, 3.5*cm, 3.5*cm, 3.5*cm], style=TableStyle(ts43)),
+              Paragraph('Table No. 4.3 : Number of students passed with backlogs in stipulated year of study', S_CAP), sp(15)]
 
-    # 4.1 ENROLMENT RATIO
-    story += [sec('4.1  Enrolment Ratio','(20)'), sp(6),
-              Paragraph('Enrolment Ratio = (N1 + N2) / N x 100', S_F), sp(4)]
+    # 4.1 ENROLMENT RATIO (SUMMARY)
+    story += [
+        Paragraph('4.1 Enrolment Ratio (20)', S_H2),
+        Paragraph('Enrolment Ratio = (N1 + N2) / N', S_B),
+        Paragraph('Following Table No. 4.1.1 shows Average Enrolment Ratio.', S_B),
+        sp(4)
+    ]
     e411 = EnrolmentRatio4_1_1.objects.first()
     if e411:
         def enr(n1,n2,n): return round(((n1+n2)/n)*100,2) if n else 0
-        ec,ec1,ec2 = enr(e411.N1,e411.N2,e411.N), enr(e411.N1_m1,e411.N2_m1,e411.N_m1), enr(e411.N1_m2,e411.N2_m2,e411.N_m2)
+        ec, ec1, ec2 = enr(e411.N1,e411.N2,e411.N), enr(e411.N1_m1,e411.N2_m1,e411.N_m1), enr(e411.N1_m2,e411.N2_m2,e411.N_m2)
         avg_er = round((ec+ec1+ec2)/3,2)
-        er1 = [[th('Item'),th('CAY'),th('CAY m1'),th('CAY m2')],
-               [tcl('N1'),tc(e411.N1),tc(e411.N1_m1),tc(e411.N1_m2)],
-               [tcl('N2'),tc(e411.N2),tc(e411.N2_m1),tc(e411.N2_m2)],
-               [tcl('N'),tc(e411.N),tc(e411.N_m1),tc(e411.N_m2)],
-               [tcl('Total (N1+N2)'),tcb(e411.N1+e411.N2),tcb(e411.N1_m1+e411.N2_m1),tcb(e411.N1_m2+e411.N2_m2)],
-               [tcl('Enrollment Ratio (%)'),tcb(ec),tcb(ec1),tcb(ec2)],
-               [tcl('Average Enrollment Ratio'),bc(f'{avg_er} %'),'','']]
-        story.append(mt(er1,[7*cm,3*cm,3*cm,3*cm],[('SPAN',(1,6),(3,6)),('BACKGROUND',(1,6),(3,6),LIGHT_BLUE)]))
-    story += [Paragraph('Table No. 4.1.1 : Average Enrollment Ratio', S_CAP), sp(4)]
+        data411 = [
+            [th('Item'), th('CAY (2023-24)'), th('CAY m1 (2022-23)'), th('CAY m2 (2021-22)')],
+            [tcl('N1'), tc(e411.N1), tc(e411.N1_m1), tc(e411.N1_m2)],
+            [tcl('N2'), tc(e411.N2), tc(e411.N2_m1), tc(e411.N2_m2)],
+            [tcl('N'), tc(e411.N), tc(e411.N_m1), tc(e411.N_m2)],
+            [tcl('Total (N1+N2)'), tcb(e411.N1+e411.N2), tcb(e411.N1_m1+e411.N2_m1), tcb(e411.N1_m2+e411.N2_m2)],
+            [tcl('Enrollment Ratio (%)'), tcb(ec), tcb(ec1), tcb(ec2)],
+            [tcl('Average Enrollment Ratio'), tcb(avg_er), '', '']
+        ]
+        story += [Table(data411, colWidths=[7*cm, 3.5*cm, 3.5*cm, 3.5*cm], style=TableStyle(BASE_TS + [('SPAN',(1,6),(3,6))])),
+                  Paragraph('Table No. 4.1.1 : Average Enrollment Ratio', S_CAP)]
+    
+    story += [Paragraph('Following Table No. 4.1.2 shows Enrolment Ratio.', S_B), sp(4)]
     e412 = EnrolmentRatioMarksOnly4_1_2.objects.first()
-    er2 = [[th('Enrolment Ratio'),th('Marks')]]
+    data412 = [[th('Item'), th('Marks')]]
     if e412:
-        er2 += [[tcl('>=90%'),tc(e412.marks_90)],[tcl('>=80%'),tc(e412.marks_80)],
-                [tcl('>=70%'),tc(e412.marks_70)],[tcl('>=60%'),tc(e412.marks_60)],
-                [tcl('>=50%'),tc(e412.marks_50)],[tcl('<50%'),tc(e412.marks_below_50)]]
-    story += [mt(er2,[12*cm,5*cm]), Paragraph('Table No. 4.1.2 : Enrolment Ratio Marks', S_CAP), sp(8)]
+        data412 += [[tcl('>=90% Students'), tc(e412.marks_90)], [tcl('>=80% Students'), tc(e412.marks_80)], [tcl('>=70% Students'), tc(e412.marks_70)],
+                    [tcl('>=60% Students'), tc(e412.marks_60)], [tcl('>=50% Students'), tc(e412.marks_50)], [tcl('<50% Students'), tc(e412.marks_below_50)]]
+    story += [Table(data412, colWidths=[8*cm, 4*cm], style=TableStyle(BASE_TS)),
+              Paragraph('Table No. 4.1.2 : Enrolment Ratio', S_CAP), sp(15)]
 
-    # 4.2 SUCCESS RATE
-    story += [sec('4.2  Success Rate','(60)'), sp(6),
-              sub('4.2.1  Without Backlogs  (40)'), sp(5),
-              Paragraph('SI = Passed without backlog / (N1+N2)  |  Success Rate = 40 x Avg SI', S_F), sp(4)]
-    srnb = list(SuccessRate.objects.all().order_by('-year_label')[:3])
-    nc = len(srnb)
-    avg_si1 = SuccessRate.last_three_avg_si()
-    d = [[th('Item')]+[th(r.year_label) for r in srnb],
-         [tcl('Total Students (X)')]+[tc(r.X) for r in srnb],
-         [tcl('Passed without backlog (Y)')]+[tc(r.Y) for r in srnb],
-         [tcl('SI = Y/X')]+[tcb(r.SI) for r in srnb],
-         [tcl('Average SI'), bc(avg_si1)]+['']*max(0,nc-1),
-         [tcl('Success Rate (40 x Avg SI)'), bc(round(40*avg_si1,2),MID_BLUE)]+['']*max(0,nc-1)]
-    story += [mt(d,[7*cm]+[3*cm]*nc, tail_extra(d,2,nc)),
-              Paragraph('Table No. 4.2.1 : Success Rate without Backlogs', S_CAP),
-              cbox([('Success Rate without Backlogs','=','40 x Average SI'),
-                    ('','=',f'40 x {avg_si1}'),('Success Rate','=',str(round(40*avg_si1,2)))]), sp(8),
-              sub('4.2.2  With Backlogs  (20)'), sp(5),
-              Paragraph('SI = Passed in stipulated period / (N1+N2)  |  Success Rate = 20 x Avg SI', S_F), sp(4)]
-    srb = list(SuccessRateWithBacklogs.objects.all().order_by('-year_label')[:3])
-    nc2 = len(srb)
-    avg_si2 = SuccessRateWithBacklogs.last_three_avg_si()
-    d2 = [[th('Item')]+[th(r.year_label) for r in srb],
-          [tcl('Total Students (X)')]+[tc(r.X) for r in srb],
-          [tcl('Passed with backlog (Y)')]+[tc(r.Y) for r in srb],
-          [tcl('SI = Y/X')]+[tcb(r.SI) for r in srb],
-          [tcl('Average SI'), bc(avg_si2)]+['']*max(0,nc2-1),
-          [tcl('Success Rate (20 x Avg SI)'), bc(round(20*avg_si2,2),MID_BLUE)]+['']*max(0,nc2-1)]
-    story += [mt(d2,[7*cm]+[3*cm]*nc2, tail_extra(d2,2,nc2)),
-              Paragraph('Table No. 4.2.2 : Success Rate with Backlogs', S_CAP),
-              cbox([('Success Rate','=','20 x Average SI'),
-                    ('','=',f'20 x {avg_si2}'),('Success Rate','=',str(round(20*avg_si2,2)))]), sp(8)]
+    # 4.2 SUCCESS RATE (SUMMARY)
+    story += [Paragraph('4.2 Success Rate in the stipulated period of the program (60)', S_H2),
+              Paragraph('4.2.1. Success rate without backlogs in any year of study (40)', S_H3),
+              Paragraph('Average SI = Mean of success index (SI) for past three batches', S_B),
+              Paragraph('Success rate without backlogs in any year of study = 40 × Average SI', S_B),
+              Paragraph('Following Table No. 4.2.1 shows success rate without backlogs in any year of study.', S_B), sp(4)]
+    sr1 = list(SuccessRate.objects.order_by('-year_label')[:3])
+    if sr1:
+        avg_si1 = SuccessRate.last_three_avg_si()
+        data421 = [[th('Item'), th('LYG'), th('LYG m1'), th('LYG m2')],
+                   [tcl('Total number of students (X)'), tc(sr1[0].X), tc(sr1[1].X), tc(sr1[2].X)],
+                   [tcl('Number of students passed without backlogs (Y)'), tc(sr1[0].Y), tc(sr1[1].Y), tc(sr1[2].Y)],
+                   [tcl('Success index (SI)'), tc(sr1[0].SI), tc(sr1[1].SI), tc(sr1[2].SI)],
+                   [tcl('Average SI'), tc(avg_si1), '', ''],
+                   [tcl('Success Rate'), tc(round(40*avg_si1, 2)), '', '']]
+        story += [Table(data421, colWidths=[7.5*cm, 3*cm, 3*cm, 3*cm], style=TableStyle(BASE_TS + [('SPAN',(1,4),(3,4)), ('SPAN',(1,5),(3,5))])),
+                  Paragraph('Table No. 4.2.1 : Success rate without backlogs in any year of study', S_CAP)]
 
-    # 4.3 FIRST YEAR ACADEMIC PERFORMANCE
-    story += [sec('4.3  Academic Performance - First Year','(25)'), sp(6),
-              Paragraph('Level = 2.5 x Avg API  |  API = Mean% x (Successful/Appeared)', S_F), sp(4)]
-    a431 = list(AcademicPerformance4_3_1.objects.exclude(year=None).order_by('-year')[:3])
-    na = len(a431)
-    avg1 = a431[0].average_api if a431 else 0
-    apl1 = a431[0].academic_performance_level if a431 else 0
-    da1 = [[th('Academic Performance')]+[th(r.year_label) for r in a431],
-           [tcl('Mean % / CGPA (X)')]+[tc(r.X) for r in a431],
-           [tcl('Successful students (Y)')]+[tc(r.Y) for r in a431],
-           [tcl('Students appeared (Z)')]+[tc(r.Z) for r in a431],
-           [tcl('API = X x (Y/Z)')]+[tcb(r.API) for r in a431],
-           [tcl('Average API'), bc(avg1)]+['']*max(0,na-1)]
-    story += [mt(da1,[7*cm]+[3*cm]*na, tail_extra(da1,1,na)),
-              Paragraph('Table No. 4.3.1 : Academic Performance in First Year', S_CAP),
-              cbox([('Academic Performance Level','=','2.5 x Avg API'),
-                    ('','=',f'2.5 x {avg1}'),('Level','=',str(apl1))]), sp(8)]
+    story += [sp(10), Paragraph('4.2.2. Success rate with backlog in stipulated period of study (20)', S_H3),
+              Paragraph('Following Table No. 4.2.2 shows success rate with backlogs in any year of study.', S_B), sp(4)]
+    sr2 = list(SuccessRateWithBacklogs.objects.order_by('-year_label')[:3])
+    if sr2:
+        avg_si2 = SuccessRateWithBacklogs.last_three_avg_si()
+        data422 = [[th('Item'), th('LYG'), th('LYG m1'), th('LYG m2')],
+                   [tcl('Total number of students (X)'), tc(sr2[0].X), tc(sr2[1].X), tc(sr2[2].X)],
+                   [tcl('Number of students passed with backlogs (Y)'), tc(sr2[0].Y), tc(sr2[1].Y), tc(sr2[2].Y)],
+                   [tcl('Success index (SI)'), tc(sr2[0].SI), tc(sr2[1].SI), tc(sr2[2].SI)],
+                   [tcl('Average SI'), tc(avg_si2), '', ''],
+                   [tcl('Success Rate'), tc(round(20*avg_si2, 2)), '', '']]
+        story += [Table(data422, colWidths=[7.5*cm, 3*cm, 3*cm, 3*cm], style=TableStyle(BASE_TS + [('SPAN',(1,4),(3,4)), ('SPAN',(1,5),(3,5))])),
+                  Paragraph('Table No. 4.2.2 : Success rate with backlogs in stipulated period of study', S_CAP), sp(15)]
 
-    # 4.4 SECOND YEAR ACADEMIC PERFORMANCE
-    story += [sec('4.4  Academic Performance - Second Year','(20)'), sp(6),
-              Paragraph('Level = 2.0 x Avg API', S_F), sp(4)]
-    a44 = list(AcademicPerformanceSecondYear.objects.exclude(year=None).order_by('-year')[:3])
-    na2 = len(a44)
-    avg2 = a44[0].average_api if a44 else 0
-    apl2 = a44[0].academic_performance_level if a44 else 0
-    da2 = [[th('Academic Performance')]+[th(r.year_label) for r in a44],
-           [tcl('Mean % / CGPA (X)')]+[tc(r.X) for r in a44],
-           [tcl('Successful students (Y)')]+[tc(r.Y) for r in a44],
-           [tcl('Students appeared (Z)')]+[tc(r.Z) for r in a44],
-           [tcl('API = X x (Y/Z)')]+[tcb(r.API) for r in a44],
-           [tcl('Average API'), bc(avg2)]+['']*max(0,na2-1),
-           [tcl('Academic Performance Level'), bc(apl2,MID_BLUE)]+['']*max(0,na2-1)]
-    story += [mt(da2,[7*cm]+[3*cm]*na2, tail_extra(da2,2,na2)),
-              Paragraph('Table No. 4.4.1 : Academic Performance in Second Year', S_CAP),
-              cbox([('Academic Performance Level','=','2.0 x Avg API'),
-                    ('','=',f'2.0 x {avg2}'),('Level','=',str(apl2))]), sp(8)]
+    # 4.3 ACADEMIC PERFORMANCE I YEAR
+    story += [Paragraph('4.3. Academic Performance in First Year (25)', S_H2),
+              Paragraph('Academic Performance Level = 2.5 * Average API', S_B),
+              Paragraph('Following table 4.3.1 shows academic performance in first year.', S_B), sp(4)]
+    ap1 = list(AcademicPerformance4_3_1.objects.exclude(year=None).order_by('-year')[:3])
+    if ap1:
+        avg_api1 = ap1[0].average_api
+        data431 = [[th('Academic Performance'), th('CAY m1'), th('CAY m2'), th('CAY m3')],
+                   [tcl('Mean Percent (X)'), tc(ap1[0].X), tc(ap1[1].X), tc(ap1[2].X)],
+                   [tcl('Total Successful Students (Y)'), tc(ap1[0].Y), tc(ap1[1].Y), tc(ap1[2].Y)],
+                   [tcl('Total Appeared (Z)'), tc(ap1[0].Z), tc(ap1[1].Z), tc(ap1[2].Z)],
+                   [tcl('API = X * (Y/Z)'), tc(ap1[0].API), tc(ap1[1].API), tc(ap1[2].API)],
+                   [tcl('Average API'), tc(avg_api1), '', '']]
+        story += [Table(data431, colWidths=[7.5*cm, 3*cm, 3*cm, 3*cm], style=TableStyle(BASE_TS + [('SPAN',(1,5),(3,5))])),
+                  Paragraph('Table No. 4.3.1 : Academic Performance in first year', S_CAP), sp(15)]
 
-    # 4.5 FINAL YEAR ACADEMIC PERFORMANCE
-    story += [sec('4.5  Academic Performance - Final Year','(15)'), sp(6),
-              Paragraph('Level = 1.5 x Avg API', S_F), sp(4)]
-    a45 = list(AcademicPerformance4_5_1.objects.exclude(year=None).order_by('-year')[:3])
-    na3 = len(a45)
-    avg3 = a45[0].average_api if a45 else 0
-    apl3 = a45[0].academic_performance_level if a45 else 0
-    da3 = [[th('Academic Performance')]+[th(r.year_label) for r in a45],
-           [tcl('Mean % / CGPA (X)')]+[tc(r.X) for r in a45],
-           [tcl('Successful students (Y)')]+[tc(r.Y) for r in a45],
-           [tcl('Students appeared (Z)')]+[tc(r.Z) for r in a45],
-           [tcl('API = X x (Y/Z)')]+[tcb(r.API) for r in a45],
-           [tcl('Average API'), bc(avg3)]+['']*max(0,na3-1),
-           [tcl('Academic Performance Level'), bc(apl3,MID_BLUE)]+['']*max(0,na3-1)]
-    story += [mt(da3,[7*cm]+[3*cm]*na3, tail_extra(da3,2,na3)),
-              Paragraph('Table No. 4.5.1 : Academic Performance in Final Year', S_CAP),
-              cbox([('Academic Performance Level','=','1.5 x Avg API'),
-                    ('','=',f'1.5 x {avg3}'),('Level','=',str(apl3))]), sp(8)]
+    # 4.4 ACADEMIC PERFORMANCE II YEAR
+    story += [Paragraph('4.4. Academic Performance in Second Year (20)', S_H2),
+              Paragraph('Academic Performance Level = 2.0 * Average API', S_B),
+              Paragraph('Following table 4.4.1 shows academic performance in second year.', S_B), sp(4)]
+    ap2 = list(AcademicPerformanceSecondYear.objects.exclude(year=None).order_by('-year')[:3])
+    if ap2:
+        avg_api2 = ap2[0].average_api
+        data441 = [[th('Academic Performance'), th('CAY m1'), th('CAY m2'), th('CAY m3')],
+                   [tcl('Mean Percent (X)'), tc(ap2[0].X), tc(ap2[1].X), tc(ap2[2].X)],
+                   [tcl('Total Successful Students (Y)'), tc(ap2[0].Y), tc(ap2[1].Y), tc(ap2[2].Y)],
+                   [tcl('Total Appeared (Z)'), tc(ap2[0].Z), tc(ap2[1].Z), tc(ap2[2].Z)],
+                   [tcl('API = X * (Y/Z)'), tc(ap2[0].API), tc(ap2[1].API), tc(ap2[2].API)],
+                   [tcl('Average API'), tc(avg_api2), '', '']]
+        story += [Table(data441, colWidths=[7.5*cm, 3*cm, 3*cm, 3*cm], style=TableStyle(BASE_TS + [('SPAN',(1,5),(3,5))])),
+                  Paragraph('Table No. 4.4.1 : Academic performance in second year', S_CAP), sp(15)]
+
+    # 4.5 ACADEMIC PERFORMANCE III YEAR
+    story += [Paragraph('4.5. Academic Performance in Final Year (15)', S_H2),
+              Paragraph('Academic Performance Level = 1.5 * Average API', S_B),
+              Paragraph('Following Table No. 4.5.1 shows academic performance in final year.', S_B), sp(4)]
+    ap3 = list(AcademicPerformance4_5_1.objects.exclude(year=None).order_by('-year')[:3])
+    if ap3:
+        avg_api3 = ap3[0].average_api
+        data451 = [[th('Academic Performance'), th('LYG'), th('LYG m1'), th('LYG m2')],
+                   [tcl('Mean Percent (X)'), tc(ap3[0].X), tc(ap3[1].X), tc(ap3[2].X)],
+                   [tcl('Total Successful Students (Y)'), tc(ap3[0].Y), tc(ap3[1].Y), tc(ap3[2].Y)],
+                   [tcl('Total Appeared (Z)'), tc(ap3[0].Z), tc(ap3[1].Z), tc(ap3[2].Z)],
+                   [tcl('API = X * (Y/Z)'), tc(ap3[0].API), tc(ap3[1].API), tc(ap3[2].API)],
+                   [tcl('Average API'), tc(avg_api3), '', '']]
+        story += [Table(data451, colWidths=[7.5*cm, 3*cm, 3*cm, 3*cm], style=TableStyle(BASE_TS + [('SPAN',(1,5),(3,5))])),
+                  Paragraph('Table No. 4.5.1 : Academic Performance in final year', S_CAP), sp(15)]
 
     # 4.6 PLACEMENT
-    story += [sec('4.6  Placement and Higher Studies','(40)'), sp(6),
-              Paragraph('P = (1.25X + Y + Z) / N  |  Assessment = 40 x Avg P', S_F), sp(4)]
-    plr = list(PlacementandHigherStudies.objects.all().order_by('-id'))
-    npl = len(plr)
-    p_vals = PlacementandHigherStudies.get_P_values()
-    avg_p = round(sum(p_vals)/3,2) if any(p_vals) else 0
-    dpl = [[th('Item')]+[th(r.year_label) for r in plr],
-           [tcl('Final Year Students (N)')]+[tc(r.N) for r in plr],
-           [tcl('Placed (X)')]+[tc(r.X) for r in plr],
-           [tcl('Higher Studies (Y)')]+[tc(r.Y) for r in plr],
-           [tcl('Entrepreneurs (Z)')]+[tc(r.Z) for r in plr],
-           [tcl('Placement Index (P)')]+[tcb(r.P) for r in plr],
-           [tcl('Average Placement'), bc(avg_p)]+['']*max(0,npl-1),
-           [tcl('Assessment (40 x Avg P)'), bc(round(40*avg_p,2),MID_BLUE)]+['']*max(0,npl-1)]
-    story += [mt(dpl,[7*cm]+[3*cm]*npl, tail_extra(dpl,2,npl)),
-              Paragraph('Table No. 4.6.1 : Placement and Higher Studies', S_CAP), sp(8)]
+    story += [Paragraph('4.6. Placement and Higher Studies (40)', S_H2),
+              Paragraph('Following table 4.6.1 shows details of Placement and Higher studies.', S_B), sp(4)]
+    phs = list(PlacementandHigherStudies.objects.order_by('-id')[:3])
+    if phs:
+        p_vals = PlacementandHigherStudies.get_P_values()
+        avg_p = round(sum(p_vals)/3, 2)
+        data461 = [[th('Item'), th('LYG'), th('LYG m1'), th('LYG m2')],
+                   [tcl('Total No. of Final Year Students (N)'), tc(phs[0].N), tc(phs[1].N), tc(phs[2].N)],
+                   [tcl('Placed (X)'), tc(phs[0].X), tc(phs[1].X), tc(phs[2].X)],
+                   [tcl('Higher Studies (Y)'), tc(phs[0].Y), tc(phs[1].Y), tc(phs[2].Y)],
+                   [tcl('Entrepreneurs (Z)'), tc(phs[0].Z), tc(phs[1].Z), tc(phs[2].Z)],
+                   [tcl('Placement Index (P)'), tc(phs[0].P), tc(phs[1].P), tc(phs[2].P)],
+                   [tcl('Average placement'), tc(avg_p), '', ''],
+                   [tcl('Assessment (40 * Average Placement)'), tc(round(40*avg_p, 2)), '', '']]
+        story += [Table(data461, colWidths=[7.5*cm, 3*cm, 3*cm, 3*cm], style=TableStyle(BASE_TS + [('SPAN',(1,6),(3,6)), ('SPAN',(1,7),(3,7))])),
+                  Paragraph('Table No. 4.6.1 : Placement and Higher studies', S_CAP), sp(15)]
 
-    # 4.6.a PLACEMENT RECORDS
-    story += [sub('4.6.a  Placement Data'), sp(6)]
-    for yr, grp in groupby(PlacementRecord.objects.all().order_by('assessment_year','student_name'),
-                           key=lambda r: r.assessment_year):
-        rows = list(grp)
-        td = [[Paragraph(f'Assessment Year: {yr}', _s('PH',fontName='Helvetica-Bold',fontSize=9,textColor=WHITE,alignment=TA_CENTER)),'','','',''],
-              [th('Sr.'),th('Student Name'),th('Enrollment No.'),th('Employer'),th('Appt. No.')]]
-        for i,r in enumerate(rows,1):
-            td.append([tc(i),tcl(r.student_name),tc(r.enrollment_no),tcl(r.employer_name),tc(r.appointment_no)])
-        story += [Table(td,colWidths=[1*cm,5.5*cm,3*cm,5*cm,2.5*cm],
-                    style=TableStyle(BASE_TS+[('SPAN',(0,0),(4,0)),('BACKGROUND',(0,0),(4,0),MID_BLUE),
-                                              ('BACKGROUND',(0,1),(4,1),DARK_BLUE),
-                                              ('ALIGN',(1,2),(1,-1),'LEFT'),('ALIGN',(3,2),(3,-1),'LEFT')]),repeatRows=2), sp(6)]
-    story += [Paragraph('Table No. 4.6.a : Placement Data', S_CAP), sp(8)]
+    # 4.6.a PLACEMENT DATA
+    story += [Paragraph('4.6. a. Placement data', S_H3)]
+    for yr, grp in groupby(PlacementRecord.objects.all().order_by('assessment_year', 'student_name'), key=lambda r: r.assessment_year):
+        records = list(grp)
+        story += [Paragraph(f'Assessment Year : {yr}', S_B), sp(4)]
+        data_pa = [[th('Sr. No.'), th('Student Name'), th('Enrollment No.'), th('Employer Name'), th('Appointment No.')]]
+        for i, r in enumerate(records, 1):
+            data_pa.append([tc(i), tcl(r.student_name), tc(r.enrollment_no), tcl(r.employer_name), tc(r.appointment_no)])
+        story += [Table(data_pa, colWidths=[1.5*cm, 5.5*cm, 3*cm, 4.5*cm, 3*cm], style=TableStyle(BASE_TS)), sp(10)]
+    story += [Paragraph('Table No. 4.6.a : Placement data assessment year wise', S_CAP), sp(15)]
 
     # 4.7 PROFESSIONAL ACTIVITIES
-    story += [PageBreak(), sec('4.7  Professional Activities','(20)'), sp(6),
-              Paragraph('<b>4.7.1  Professional Societies / Technical Events  (10)</b>', S_H2), sp(4)]
-    for yr, grp in groupby(ProfessionalActivity.objects.all().order_by('assessment_year','date'),
-                           key=lambda r: r.assessment_year):
-        rows = list(grp)
-        td = [[Paragraph(str(yr),_s('PA',fontName='Helvetica-Bold',fontSize=9,textColor=WHITE,alignment=TA_CENTER)),'','','',''],
-              [th('Sr.'),th('Date'),th('Event Name'),th('Details'),th('Society')]]
-        for i,r in enumerate(rows,1):
-            ds = r.date.strftime('%d/%m/%Y') if hasattr(r.date,'strftime') else str(r.date)
-            det = r.details[:65]+('...' if len(r.details)>65 else '')
-            td.append([tc(i),tc(ds),tcl(r.event_name),tcl(det),tc(r.professional_society)])
-        story += [Table(td,colWidths=[0.8*cm,2.2*cm,4.5*cm,7*cm,1.5*cm],
-                    style=TableStyle(BASE_TS+[('SPAN',(0,0),(4,0)),('BACKGROUND',(0,0),(4,0),MID_BLUE),
-                                              ('BACKGROUND',(0,1),(4,1),DARK_BLUE),
-                                              ('ALIGN',(2,2),(3,-1),'LEFT'),('FONTSIZE',(0,0),(-1,-1),7.5)]),repeatRows=2), sp(6)]
-    story += [Paragraph('Table No. 4.7.1 : Professional Societies', S_CAP), sp(8)]
+    story += [Paragraph('4.7. Professional Activities (20)', S_H2),
+              Paragraph('4.7.1. Professional societies / student chapters and organizing technical events (10)', S_H3),
+              Paragraph('Following table 4.7.1 shows Professional Activities', S_B), sp(4)]
+    for yr, grp in groupby(ProfessionalActivity.objects.all().order_by('assessment_year', 'date'), key=lambda r: r.assessment_year):
+        records = list(grp)
+        story += [Paragraph(str(yr), S_B), sp(4)]
+        data_prof = [[th('Sr. No.'), th('Date'), th('Event Name'), th('Details'), th('Professional Society')]]
+        for i, r in enumerate(records, 1):
+            data_prof.append([tc(i), tc(r.date.strftime("%d/%m/%Y")), tw(r.event_name), tw(r.details), tc(r.professional_society)])
+        story += [Table(data_prof, colWidths=[1.2*cm, 2*cm, 4.5*cm, 7*cm, 2.5*cm], style=TableStyle(BASE_TS)), sp(10)]
+    story += [Paragraph('Table No. 4.7.1 : Professional Activities', S_CAP), sp(15)]
 
     # 4.7.2 PUBLICATIONS
-    story += [sub('4.7.2  Publications  (05)'), sp(5),
-              Paragraph('College E-Bulletin, Technical Magazines, Departmental Newsletters', S_B), sp(4)]
-    pd2 = [[th('Publication Description'),th('Year'),th('Issue No.'),th('Editor / Author')]]
-    for r in Publication.objects.all().order_by('year_of_publication'):
-        pd2.append([tcl(r.publication_description),tc(r.year_of_publication),tc(r.issue_no),tcl(r.editor_author)])
-    story += [mt(pd2,[6*cm,3*cm,3*cm,5*cm]),
-              Paragraph('Table No. 4.7.2 : Publications', S_CAP), sp(8)]
+    story += [Paragraph('4.7.2. Publication of technical magazines, newsletters, etc. (05)', S_H3)]
+    data_pub = [[th('Publication Description'), th('Year'), th('Issue No.'), th('Editor/Author')]]
+    for r in Publication.objects.all().order_by('-year_of_publication'):
+        data_pub.append([tw(r.publication_description), tc(r.year_of_publication), tc(r.issue_no), tw(r.editor_author)])
+    story += [Table(data_pub, colWidths=[6.5*cm, 3.5*cm, 3.5*cm, 4.5*cm], style=TableStyle(BASE_TS)),
+              Paragraph('Table No. 4.7.2 : Publication of technical magazines, newsletters', S_CAP), sp(15)]
 
     # 4.7.3 STUDENT PARTICIPATION
-    story += [sub('4.7.3  Student Participation in Events  (05)'), sp(5)]
-    for yr, grp in groupby(StudentParticipation.objects.all().order_by('assessment_year','student_name'),
-                           key=lambda r: r.assessment_year):
-        rows = list(grp)
-        td = [[Paragraph(str(yr),_s('SP',fontName='Helvetica-Bold',fontSize=9,textColor=WHITE,alignment=TA_CENTER)),'','','','','','',''],
-              [th('Sr.'),th('Activity'),th('Date'),th('Student'),th('Org. Body'),th('Award'),th('Level'),th('Rel.')]]
-        for i,r in enumerate(rows,1):
-            org = r.organizing_body[:35]+('...' if len(r.organizing_body)>35 else '')
-            td.append([tc(i),tcl(r.type_of_activity),tc(r.date),tcl(r.student_name),
-                       tcl(org),tc(r.awards[:18] if r.awards else '-'),tc(r.level),
-                       tcl(r.relevance_peos_pos[:12] if r.relevance_peos_pos else '-')])
-        story += [Table(td,colWidths=[0.7*cm,3*cm,1.6*cm,3.5*cm,3.5*cm,1.8*cm,1.8*cm,1.1*cm],
-                    style=TableStyle(BASE_TS+[('SPAN',(0,0),(7,0)),('BACKGROUND',(0,0),(7,0),MID_BLUE),
-                                              ('BACKGROUND',(0,1),(7,1),DARK_BLUE),
-                                              ('ALIGN',(1,2),(1,-1),'LEFT'),('ALIGN',(3,2),(4,-1),'LEFT'),
-                                              ('FONTSIZE',(0,0),(-1,-1),7)]),repeatRows=2), sp(6)]
-    story += [Paragraph('Table No. 4.7.3 : Student Participation', S_CAP)]
+    story += [Paragraph('4.7.3 Participation in inter-institute/state/national events (05)', S_H3)]
+    for yr, grp in groupby(StudentParticipation.objects.all().order_by('assessment_year', 'student_name'), key=lambda r: r.assessment_year):
+        records = list(grp)
+        story += [Paragraph(str(yr), S_B), sp(4)]
+        data_sp = [[th('Sr. No.'), th('Type of Activity'), th('Date'), th('Student Name'), th('Organizing Body'), th('Awards'), th('Level'), th('Relevance to POs/PEOs')]]
+        for i, r in enumerate(records, 1):
+            data_sp.append([tc(i), tw(r.type_of_activity), tc(r.date), tw(r.student_name), tw(r.organizing_body), tc(r.awards), tc(r.level), tw(r.relevance_peos_pos)])
+        story += [Table(data_sp, colWidths=[0.8*cm, 2.5*cm, 1.8*cm, 3*cm, 3*cm, 2*cm, 1.6*cm, 2.5*cm], style=TableStyle(BASE_TS + [('FONTSIZE',(0,0),(-1,-1),7)])), sp(10)]
 
     doc.build(story, onFirstPage=on_page, onLaterPages=on_page)
     return response

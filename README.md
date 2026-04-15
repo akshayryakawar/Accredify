@@ -40,7 +40,7 @@ git push
 
 - **Frontend:** HTML, CSS, Bootstrap 5
 - **Backend:** Python, Django
-- **Database:** SQLite
+- **Database:** PostgreSQL
 - **PDF Reports:** ReportLab
 - **Charts:** Chart.js
 
@@ -84,7 +84,7 @@ A Django-based Accredify project for managing **Criterion 4** data with a modern
 
 - **Frontend:** HTML, CSS, Bootstrap 5
 - **Backend:** Python, Django
-- **Database:** SQLite
+- **Database:** PostgreSQL
 - **PDF Reports:** ReportLab
 - **Charts:** Chart.js
 
@@ -141,7 +141,7 @@ python manage.py migrate
 python manage.py runserver
 
 ## 🌍 Setup on Another PC
-1. **PostgreSQL**: Install PostgreSQL and create a database named `naac_portal_db`.
+1. **PostgreSQL**: Install PostgreSQL and create a database named `accredify_db` (or as configured in `.env`).
 2. **Environment**: Copy `.env.example` to `.env` and update the `DB_PASSWORD`.
 3. **Initialization**: Run `python manage.py migrate` to set up tables.
 4. **Data Transfer**: Use `python manage.py dumpdata` (old PC) and `python manage.py loaddata` (new PC) to move data.
